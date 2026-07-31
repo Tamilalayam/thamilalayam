@@ -1,6 +1,4 @@
 // Thamilalayam Bad Schwalbach - Dynamic Content Data
-// Replace the contents of sports-config.js with this file to apply changes permanently.
-
 window.siteContent = {
   "logo": "IMG_3529.jpg",
   "titleTa": "தமிழாலயம் பாட்சுவல்பாக்",
@@ -187,7 +185,44 @@ window.siteContent = {
     "facebook": "Thamilalayam",
     "email": "thamilalayam@gmail.com"
   },
+  "pages": [
+    {
+      "id": "page_demo",
+      "slug": "school-info",
+      "title": "பள்ளி விபரங்கள்",
+      "showInNav": true,
+      "navOrder": 1,
+      "items": [
+        {
+          "type": "text",
+          "style": "h1",
+          "text": "தமிழாலயம் பாட்சுவல்பாக் – பள்ளி விபரங்கள்",
+          "id": "item_demo_h1"
+        },
+        {
+          "type": "text",
+          "style": "p",
+          "text": "இது Baukasten (Building Blocks) முறையில் உருவாக்கப்பட்ட ஒரு மாதிரிப் பக்கம். Admin panel-ல் இந்த உள்ளடக்கத்தை எளிதாகத் திருத்தலாம்.",
+          "id": "item_demo_p1"
+        },
+        {
+          "type": "link",
+          "text": "📞 தொடர்பு கொள்ள",
+          "href": "contact.html",
+          "style": "button-primary",
+          "target": "_self",
+          "id": "item_demo_link"
+        }
+      ]
+    }
+  ],
   "portalGridConfig": [
+    {
+      "icon": "📅",
+      "title": "நிகழ்வுகள்",
+      "desc": "தமிழாலய  நிகழ்வுகள் மற்றும் நாள்  விபரங்கள்.",
+      "href": "events.html"
+    },
     {
       "icon": "🔐",
       "title": "மாணவர் உள்நுழைவு",
@@ -199,12 +234,6 @@ window.siteContent = {
       "title": "தேர்வுகள்",
       "desc": "தேர்வுப் பெறுபேறுகள்  மற்றும் போட்டி முடிவு  அறிவிப்புகள்.",
       "href": "exams.html"
-    },
-    {
-      "icon": "📅",
-      "title": "நிகழ்வுகள்",
-      "desc": "தமிழாலய  நிகழ்வுகள் மற்றும் நாள்  விபரங்கள்.",
-      "href": "events.html"
     },
     {
       "icon": "🖼️",
@@ -305,6 +334,276 @@ window.siteContent = {
         "examResults": "தேர்வுப் பெறுபேறுகள்: இன்னும் வெளியிடப்படவில்லை (Awaiting results).",
         "tamilResults": "தமிழ்த்திறன் போட்டிப் பெறுபேறுகள்: பெறுபேறுகள் விரைவில் வெளியிடப்படும்.",
         "otherDetails": "அறிவிப்பு: அடுத்த பெற்றோர்-ஆசிரியர் சந்திப்பு 15-08-2026 அன்று நடைபெறும்."
+      },
+      {
+        "username": "Vittal",
+        "password": "1234",
+        "fullName": "விட்டல் ராமன்",
+        "fullNameEn": "Vittal Raman",
+        "studentClass": "3",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"மிகுதிறன்\",\"listening\":\"மிகுதிறன்\",\"reading\":\"திறன்\",\"writing\":\"\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Anchai",
+        "password": "1234",
+        "fullName": "அஞ்சை கணேசமூர்த்தி",
+        "fullNameEn": "Anchai Kanesamoorthy",
+        "studentClass": "01",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"-\",\"listening\":\"-\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"-\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Poomika",
+        "password": "1234",
+        "fullName": "பூமிகா ஆதிரை",
+        "fullNameEn": "Poomika Athirai",
+        "studentClass": "01",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"-\",\"listening\":\"-\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"-\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Kruthvika",
+        "password": "1234",
+        "fullName": "கிருத்திவிகா பாரதிதாசன்",
+        "fullNameEn": "Kruthvika Barathi Dhasan",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"மிகுதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"நிறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Kruththin",
+        "password": "1234",
+        "fullName": "கிருத்தின்  பாரதிதாசன்",
+        "fullNameEn": "Kruththin Barathi Dhasan",
+        "studentClass": "08",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"உயர்தேர்ச்சி\",\"reading\":\"-\",\"writing\":\"1\",\"skill\":\"தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Yuvan",
+        "password": "1234",
+        "fullName": "யுவன் விஷ்வா பூபதிபாலவடிவேற்கரன்",
+        "fullNameEn": "Yuvan Vishva Boopathibalavadivetkaran",
+        "studentClass": "01",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"-\",\"listening\":\"-\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"-\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Neyan",
+        "password": "1234",
+        "fullName": "நேயன் நல்லையா",
+        "fullNameEn": "Neyan Nallaiah",
+        "studentClass": "06",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"மிகுதிறன்\",\"reading\":\"-\",\"writing\":\"1\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Prakriti",
+        "password": "1234",
+        "fullName": "பிரக்கிரிதி சிறிநாத்",
+        "fullNameEn": "Prakriti Srinatha",
+        "studentClass": "06",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"உயர்தேர்ச்சி\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"திறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Sanjai",
+        "password": "1234",
+        "fullName": "சஞ்சய் பூலோகராசா",
+        "fullNameEn": "Sanjai Poolagarasa",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"மிகுதிறன்\",\"listening\":\"நிறைவு\",\"reading\":\"-\",\"writing\":\"2\",\"skill\":\"நிறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Jeyan",
+        "password": "1234",
+        "fullName": "ஜெயன் சண்முகநாதன்",
+        "fullNameEn": "Jeyan Sanmuganathan",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"நிறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Aehan",
+        "password": "1234",
+        "fullName": "ஏகன் அனேகன் பூபதிபாலவடிவேற்கரன்",
+        "fullNameEn": "Aehan Anaehan Boopathybalavadivetkaran",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"1\",\"skill\":\"திறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Sahana",
+        "password": "1234",
+        "fullName": "சஹானா மணிகண்டன்",
+        "fullNameEn": "Sahana Manikandan",
+        "studentClass": "02",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"மிகுதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"திறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Presha",
+        "password": "1234",
+        "fullName": "பிரேஷா சிறீநாத்",
+        "fullNameEn": "Presha Sreenath",
+        "studentClass": "02",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"நிறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Nila",
+        "password": "1234",
+        "fullName": "நிலா சுதாகர்",
+        "fullNameEn": "Nila Sudhakar",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"மிகுதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Yugan",
+        "password": "1234",
+        "fullName": "யுகன் பத்மநாதபிரபு",
+        "fullNameEn": "Yugan Padmanathaprabu",
+        "studentClass": "09",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"மிகுதிறன்\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Aathanyan",
+        "password": "1234",
+        "fullName": "ஆதன்யன் வேல்முருகு",
+        "fullNameEn": "Aathanyan Velmuruku",
+        "studentClass": "03",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"அதிதிறன்\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"மிகுதிறன்\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Sathushan",
+        "password": "1234",
+        "fullName": "சதுஷன் அரங்கேசன்",
+        "fullNameEn": "Sathushan Arankesan",
+        "studentClass": "08",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"குறைவு\",\"listening\":\"குறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"குறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Mithushan",
+        "password": "1234",
+        "fullName": "மிதுஷன் அரங்கேசன்",
+        "fullNameEn": "Mithushan Arankesan",
+        "studentClass": "10",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"உயர்தேர்ச்சி\",\"listening\":\"தேர்ச்சி\",\"reading\":\"-\",\"writing\":\"3\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Sathurthika",
+        "password": "1234",
+        "fullName": "சதுர்த்திகா சந்திரசேகரன்",
+        "fullNameEn": "Sathurthika Chandrasegaran",
+        "studentClass": "10",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"நிறைவு\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"1\",\"skill\":\"நிறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Kabisha",
+        "password": "1234",
+        "fullName": "கபிஷா தேவகாஞ்சன்",
+        "fullNameEn": "Kabisha Thevakanchan",
+        "studentClass": "10",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"2\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Sarujan",
+        "password": "1234",
+        "fullName": "சாருயன் சுதாகர்",
+        "fullNameEn": "Sarujan Suthagar",
+        "studentClass": "10",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"உயர்தேர்ச்சி\",\"listening\":\"அதிதிறன்\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"நிறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Ameer",
+        "password": "1234",
+        "fullName": "செய்யது ஹாதில் அமீர்",
+        "fullNameEn": "Seyd Hadhil Ameer",
+        "studentClass": "09",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"தேர்ச்சி\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Ayani",
+        "password": "1234",
+        "fullName": "அயனி சுரஸ்வரன்",
+        "fullNameEn": "Ayani Sureshwaran",
+        "studentClass": "07",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"உயர்தேர்ச்சி\",\"listening\":\"நிறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Lattika",
+        "password": "1234",
+        "fullName": "லத்திகா சோபி பூலோகராசா",
+        "fullNameEn": "Lattika Sophie Poologarajah",
+        "studentClass": "08",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"குறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"குறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Jeevan",
+        "password": "1234",
+        "fullName": "ஜீவன் வெங்கடசெல்வம்",
+        "fullNameEn": "Jeevan Vengadaselvam",
+        "studentClass": "08",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"மிகுதிறன்\",\"listening\":\"தேர்ச்சி\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Aradhana",
+        "password": "1234",
+        "fullName": "ஆராதனா சரவணகுமார்",
+        "fullNameEn": "Aradhana Saravanakumar",
+        "studentClass": "06",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"தேர்ச்சி\",\"listening\":\"குறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"தேர்ச்சி\"}",
+        "tamilResults": "",
+        "otherDetails": ""
+      },
+      {
+        "username": "Kabinan",
+        "password": "1234",
+        "fullName": "கபினன் தேவகாஞ்சன்",
+        "fullNameEn": "Kabinan Thevakanchan",
+        "studentClass": "06",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"உயர்தேர்ச்சி\",\"listening\":\"குறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"குறைவு\"}",
+        "tamilResults": "",
+        "otherDetails": ""
       }
     ],
     "pdfs": [

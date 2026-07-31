@@ -1,0 +1,211 @@
+/* ==========================================================================
+   APPLICATION.CSS — விண்ணப்பப் படிவம் (Registration Form) + embedded
+   category/color admin overlay. Pairs with baukasten.css (shared header/nav).
+
+   IMPORTANT: --body-bg-start/end, --header-bg-start/end, --accent-color and
+   --container-bg are set dynamically by admin.html's "படிவ வண்ணங்கள்" (Form
+   Colors) editor via inline style / JS. Do not hardcode these — the whole
+   point is that admins can recolor this page live.
+   ========================================================================== */
+
+body {
+  background: linear-gradient(135deg, var(--body-bg-start, #7a0e30) 0%, var(--body-bg-end, #ff7a3d) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px; margin: 15px auto;
+  background: var(--container-bg, #ffffff);
+  border-radius: 24px; overflow: hidden;
+  box-shadow: 0 18px 45px rgba(47, 95, 167, 0.18);
+  border: 1px solid rgba(96, 165, 250, 0.20);
+}
+
+.header {
+  text-align: center; padding: 42px 24px 38px;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.28), transparent 35%),
+    linear-gradient(135deg, var(--header-bg-start, #7a0e30), var(--header-bg-end, #c81d4f));
+  color: #fff;
+}
+.logo-wrap {
+  width: 156px; height: 156px; margin: 0 auto 20px;
+  background: rgba(255,255,255,0.9); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18); padding: 10px;
+}
+.header img { width: 136px; height: 136px; object-fit: contain; border-radius: 50%; }
+.header h1 { font-size: clamp(30px, 5vw, 46px); margin-bottom: 12px; letter-spacing: 0.2px; }
+.header p { font-size: clamp(18px, 3vw, 25px); color: #eef6ff; font-weight: 600; }
+
+.form-title {
+  text-align: center; padding: 28px 20px;
+  background: linear-gradient(180deg, #fff5f2, #ffffff);
+  border-bottom: 1px solid #ffd9c2;
+}
+.form-title h2 { font-size: clamp(28px, 4.5vw, 40px); color: var(--header-bg-end, #c81d4f); line-height: 1.35; }
+
+form { padding: 32px; }
+.form-group { margin-bottom: 24px; }
+label { display: block; margin-bottom: 10px; font-size: 18px; font-weight: 700; color: #250a17; }
+.hint { display: block; margin-top: 7px; font-size: 14px; color: #6b5a62; font-weight: 500; line-height: 1.5; }
+.row { display: flex; gap: 20px; }
+.col { flex: 1; }
+
+input, select, textarea {
+  width: 100%; padding: 15px 16px; border: 1.5px solid #f0d0da;
+  border-radius: 14px; font-size: 16px; background: #fffaf8; color: #250a17;
+  outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-color, #ff7a3d);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 122, 61, 0.16);
+}
+select { cursor: pointer; }
+textarea { resize: vertical; min-height: 120px; }
+
+.date-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 14px; }
+
+.games-box {
+  padding: 18px; background: #fff0f4; border: 1px solid #ffd7e2;
+  border-radius: 16px; font-size: 18px; line-height: 2; min-height: 58px;
+}
+.games-box label {
+  display: inline-flex; align-items: center; gap: 8px; margin: 6px 18px 6px 0;
+  padding: 8px 12px; background: #fff; border-radius: 999px; border: 1px solid #ffd7e2;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+}
+.games-box input { width: auto; }
+
+.agreement-box { padding: 18px; background: #fff7f5; border: 1px solid #ffd7e2; border-radius: 16px; }
+.agreement-box label { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 1.8; font-weight: 500; margin: 0; }
+.agreement-box input { width: auto; margin-top: 8px; transform: scale(1.2); }
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--header-bg-start, #7a0e30), var(--header-bg-end, #c81d4f));
+  color: #fff; padding: 17px; border: none; border-radius: 16px;
+  font-size: 21px; font-weight: bold; cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+  box-shadow: 0 12px 24px rgba(122, 14, 48, 0.25);
+}
+.submit-btn:hover {
+  background: linear-gradient(135deg, var(--body-bg-start, #7a0e30), var(--accent-color, #ff7a3d));
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(122, 14, 48, 0.32);
+}
+
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .container { margin: 15px auto; border-radius: 18px; }
+  form { padding: 22px; }
+  .row, .date-row { display: flex; flex-direction: column; gap: 14px; }
+  .logo-wrap { width: 132px; height: 132px; }
+  .header img { width: 114px; height: 114px; }
+}
+
+/* ==========================================================================
+   ADMIN OVERLAY — floating button + modal for editing categories/colors/logo
+   (dark theme, matches admin.html's dashboard language)
+   ========================================================================== */
+.admin-fab {
+  position: fixed; bottom: 15px; right: 15px;
+  background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px);
+  color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px; padding: 6px 12px; font-size: 11px; font-weight: 500;
+  cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex; align-items: center; z-index: 1000; transition: all 0.2s ease;
+}
+.admin-fab:hover { background: rgba(15, 23, 42, 0.8); color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+
+.admin-modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.admin-modal.open { opacity: 1; pointer-events: auto; }
+.admin-content {
+  background: #1e293b; color: #f1f5f9; width: 90%; max-width: 800px; height: 85vh;
+  border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: scale(0.95); transition: transform 0.3s ease;
+}
+.admin-modal.open .admin-content { transform: scale(1); }
+
+.admin-header { padding: 20px 24px; background: #0f172a; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+.admin-header h3 { font-size: 20px; font-weight: bold; color: #ff8f5c; }
+.admin-close { background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; transition: color 0.2s ease; }
+.admin-close:hover { color: #f1f5f9; }
+
+.admin-tabs { display: flex; background: #0f172a; padding: 0 16px; gap: 8px; overflow-x: auto; }
+.admin-tab { background: none; border: none; color: #94a3b8; padding: 14px 16px; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap; position: relative; transition: color 0.2s ease; }
+.admin-tab:hover { color: #f1f5f9; }
+.admin-tab.active { color: #ff8f5c; }
+.admin-tab.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #ff8f5c; border-radius: 9999px; }
+
+.admin-body { flex: 1; padding: 24px; overflow-y: auto; background: #1e293b; }
+.admin-panel-section { display: none; }
+.admin-panel-section.active { display: block; animation: adminFadeIn 0.2s ease-in-out; }
+@keyframes adminFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.passcode-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; text-align: center; padding: 24px; }
+.passcode-input-wrap { display: flex; gap: 10px; max-width: 320px; width: 100%; }
+.passcode-input-wrap input { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; text-align: center; font-size: 20px; letter-spacing: 4px; border-radius: 8px; }
+
+.admin-field { margin-bottom: 20px; }
+.admin-field label { color: #cbd5e1; font-size: 14px; margin-bottom: 8px; font-weight: 600; display: block; }
+.admin-field input[type="text"], .admin-field input[type="password"], .admin-field input[type="url"],
+.admin-field select, .admin-field textarea {
+  background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); color: #f1f5f9;
+  padding: 12px 14px; font-size: 15px; border-radius: 8px; width: 100%;
+}
+.admin-field input:focus, .admin-field select:focus, .admin-field textarea:focus {
+  border-color: #ff8f5c; box-shadow: 0 0 0 3px rgba(255, 143, 92, 0.2);
+}
+
+.color-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.color-picker-item { background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 8px; }
+.color-picker-input-wrap { display: flex; align-items: center; gap: 12px; }
+.color-picker-input-wrap input[type="color"] { width: 44px; height: 44px; border: none; border-radius: 8px; cursor: pointer; background: none; padding: 0; }
+.color-picker-input-wrap input[type="text"] { padding: 8px 10px; font-size: 14px; text-transform: uppercase; }
+
+.cat-list { display: flex; flex-direction: column; gap: 12px; max-height: 45vh; overflow-y: auto; padding-right: 4px; }
+.cat-item { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; transition: border-color 0.2s ease; }
+.cat-item:hover { border-color: rgba(255, 143, 92, 0.35); }
+.cat-header-inputs { display: grid; grid-template-columns: 2.2fr 1.3fr 1.3fr auto; gap: 12px; align-items: center; margin-bottom: 12px; }
+.cat-header-inputs input { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 8px 10px; font-size: 14px; border-radius: 6px; width: 100%; }
+.cat-games-title { font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 8px; }
+.cat-games-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.cat-game-tag { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1); color: #cbd5e1; padding: 4px 10px; border-radius: 9999px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.cat-game-tag button { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.cat-game-tag button:hover { color: #ef4444; }
+.cat-game-add-wrap { display: flex; gap: 8px; max-width: 320px; }
+.cat-game-add-wrap input { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 6px 10px; font-size: 13px; border-radius: 6px; width: 100%; }
+
+.admin-footer { padding: 16px 24px; background: #0f172a; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: flex-end; gap: 12px; }
+.admin-btn { padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; transition: all 0.2s ease; }
+.admin-btn-primary { background: #ff7a3d; color: #fff; }
+.admin-btn-primary:hover { background: #e8622a; }
+.admin-btn-secondary { background: #334155; color: #cbd5e1; }
+.admin-btn-secondary:hover { background: #475569; color: #fff; }
+.admin-btn-danger { background: #dc2626; color: #fff; }
+.admin-btn-danger:hover { background: #b91c1c; }
+.admin-btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; background: #334155; color: #94a3b8; cursor: pointer; border: none; }
+.admin-btn-icon:hover { background: #ef4444; color: #fff; }
+
+.logo-upload-wrap { display: flex; align-items: center; gap: 16px; margin-top: 6px; background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.logo-preview-box { width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.1); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; }
+.logo-preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.logo-upload-btn { background: #334155; color: #cbd5e1; padding: 8px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); transition: background 0.2s ease; }
+.logo-upload-btn:hover { background: #475569; color: #fff; }
+
+.code-textarea {
+  font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.5; height: 200px;
+  background: #0f172a; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%; padding: 12px; border-radius: 8px; resize: vertical;
+}

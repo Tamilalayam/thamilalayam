@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>பக்கம் | தமிழாலயம் பாட்சுவல்பாக்</title>
+  <link rel="icon" href="IMG_3529.jpg" type="image/jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@600;700;800&family=Baloo+Thambi+2:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marutham&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="baukasten.css">
+
+
+
+</head>
+<body>
+
+  <!-- Top Marquee Bar -->
+  <div class="top-bar">
+    <div class="marquee-container" style="overflow:hidden;">
+      <div class="marquee-track">
+        <span class="marquee-text">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
+        <span class="marquee-text" style="padding-left:150px;">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand Header -->
+  <header class="brand-header">
+    <div class="brand-header-content">
+      <a href="index.html" class="brand-logo-container">
+        <img id="header-logo" src="IMG_3529.jpg" alt="Logo" class="main-logo">
+        <div class="brand-text">
+          <h1 id="header-title-ta">தமிழாலயம் பாட்சுவல்பாக்</h1>
+          <p id="header-title-en">Thamilalayam Bad Schwalbach</p>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="main-navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link" id="nav-home">முகப்பு</a>
+        <a href="events.html" class="nav-link" id="nav-events">நிகழ்வுகள்</a>
+        <a href="exams.html" class="nav-link" id="nav-exams">தேர்வுகள்</a>
+        <a href="gallery.html" class="nav-link" id="nav-gallery">படங்கள்</a>
+        <a href="contact.html" class="nav-link" id="nav-contact">தொடர்புகள்</a>
+        <a href="login.html" class="nav-link" id="nav-login">Login</a>
+        <a href="admin.html" class="nav-link" id="nav-admin" style="display:none;">நிர்வாகம்</a>
+      </div>
+      <div class="mobile-nav-title">தமிழாலயம் பாட்சுவல்பாக்</div>
+    </div>
+  </nav>
+
+  <!-- Dynamic Baukasten Content -->
+  <section class="bk-page-section">
+    <h1 class="bk-page-title" id="page-title">ஏற்றப்படுகிறது...</h1>
+    <div class="bk-content-container" id="content-container">
+      <div class="bk-empty">ஏற்றப்படுகிறது...</div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 தமிழாலயம் பாட்சுவல்பாக். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.</p>
+  </footer>
+
+  <a href="admin.html" class="bk-admin-badge" id="admin-edit-btn" style="display:none;" title="இந்தப் பக்கத்தைத் திருத்து">✏️ திருத்து</a>
+
+  <script src="sports-config.js"></script>
+  <script src="baukasten.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('p') || params.get('page') || '';
+
+      const content = Baukasten.loadSiteContent();
+      Baukasten.applySiteBranding(content);
+      Baukasten.injectCustomNavLinks(content, slug);
+      Baukasten.initMobileMenu();
+      Baukasten.initAdminShortcut();
+
+      const isAdmin = sessionStorage.getItem('isAdminLoggedIn') === 'true';
+      const editBtn = document.getElementById('admin-edit-btn');
+      if (editBtn && isAdmin) {
+        editBtn.style.display = 'block';
+        editBtn.href = 'admin.html#baukasten';
+      }
+
+      const titleEl = document.getElementById('page-title');
+      const container = document.getElementById('content-container');
+
+      if (!slug) {
+        titleEl.textContent = 'பக்கம் கிடைக்கவில்லை';
+        container.innerHTML =
+          '<div class="bk-not-found">' +
+          '<h2>⚠️ பக்கம் தேர்ந்தெடுக்கப்படவில்லை</h2>' +
+          '<p>URL-ல் <code>?p=பக்க-பெயர்</code> என்று slug-ஐக் குறிப்பிடவும்.</p>' +
+          '<a href="index.html">← முகப்புக்குத் திரும்பு</a>' +
+          '</div>';
+        document.title = 'பக்கம் கிடைக்கவில்லை | தமிழாலயம்';
+        return;
+      }
+
+      const page = Baukasten.getPageBySlug(content, slug);
+
+      if (!page) {
+        titleEl.textContent = 'பக்கம் கிடைக்கவில்லை';
+        container.innerHTML =
+          '<div class="bk-not-found">' +
+          '<h2>⚠️ "' + Baukasten.escapeHtml(slug) + '" பக்கம் இல்லை</h2>' +
+          '<p>அட்மின் panel → Baukasten பக்கங்கள் → புதிய பக்கம் சேர்க்கவும்.</p>' +
+          '<a href="index.html">← முகப்புக்குத் திரும்பு</a>' +
+          '</div>';
+        document.title = 'பக்கம் கிடைக்கவில்லை | தமிழாலயம்';
+        return;
+      }
+
+      const siteTitle = content.titleTa || 'தமிழாலயம் பாட்சுவல்பாக்';
+      titleEl.textContent = page.title || slug;
+      document.title = (page.title || slug) + ' | ' + siteTitle;
+
+      Baukasten.renderBlocks(container, page.items || []);
+    });
+  </script>
+</body>
+</html>
