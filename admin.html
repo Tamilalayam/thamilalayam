@@ -2925,18 +2925,29 @@ window.siteContent = ${JSON.stringify(currentContent, null, 2)};
     // Direct Cloud configuration saving
     function saveConfigToCloud(event) {
       try {
+        // 🚨 100% Safety Guarantee Lock: Check if student vault data is missing locally
+        const users = currentContent.vaultConfig?.users || [];
+        if (!users || users.length === 0) {
+          alert(
+            "🛑 ஆபத்தான எச்சரிக்கை! (100% Safety Lock Enabled)\n\n" +
+            "உங்களின் கணினியில் மாணவர் தரவுகள் (Student Vault Records) எதுவும் இல்லை!\n\n" +
+            "இப்படியே கிளவுடில் சேமித்தால் கூகிளில் உள்ள தரவு அழிந்துவிடும், எனவே முதலில் '☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)' பொத்தானை அழுத்துங்கள்!"
+          );
+          return;
+        }
+
         let scriptURL = currentContent.formConfig?.scriptURL || currentContent.scriptURL;
         if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
           scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
         }
-      if (!scriptURL) {
-        alert("கூகுள் ஸ்கிரிப்ட் முகவரி (Google Script URL) பொது அமைப்புகளில் இன்னும் இணைக்கப்படவில்லை!");
-        return;
-      }
-      
-      if (!confirm("இந்த மாற்றங்களை நேரடியாகக் கூகுள் கிளவுடில் சேமிக்க விரும்புகிறீர்களா? (இணையதளம் கோப்பு அப்லோடு செய்யாமல் உடனே அப்டேட் ஆகும்!)")) {
-        return;
-      }
+        if (!scriptURL) {
+          alert("கூகுள் ஸ்கிரிப்ட் முகவரி (Google Script URL) பொது அமைப்புகளில் இன்னும் இணைக்கப்படவில்லை!");
+          return;
+        }
+        
+        if (!confirm("இந்த மாற்றங்களை நேரடியாகக் கூகுள் கிளவுடில் சேமிக்க விரும்புகிறீர்களா? (இணையதளம் கோப்பு அப்லோடு செய்யாமல் உடனே அப்டேட் ஆகும்!)")) {
+          return;
+        }
       
       const saveBtn = event ? event.target : null;
       let oldText = "";
@@ -3058,18 +3069,16 @@ window.siteContent = ${JSON.stringify(currentContent, null, 2)};
     }
 
 
-    // Safety Protection Guard against accidental cloud data wipe
+    // Safety Protection Guard against accidental cloud data wipe (100% Safety Lock)
     function checkCloudSaveSafety() {
-      const localVault = currentContent.vaultConfig || [];
-      if (localVault.length === 0) {
-        const confirmSave = confirm(
-          "⚠️ எச்சரிக்கை (Safety Warning)!\n\n" +
-          "உங்களின் தற்போதைய கணினியில் மாணவர் தரவுகள் (Student Vault Records) எதுவும் இல்லை!\n\n" +
-          "இப்படியே கிளவுடில் சேமித்தால் கூகிள் கிளவுடில் உள்ள மாணவர் தரவுகள் அழிய வாய்ப்புள்ளது.\n\n" +
-          "முதலில் '☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)' பொத்தானை அழுத்தித் தரவுகளைப் பெற்றுக் கொள்ள பரிந்துரைக்கப்படுகிறது.\n\n" +
-          "இருப்பினும் தொடர விரும்புகிறீர்களா?"
+      const users = currentContent.vaultConfig?.users || [];
+      if (!users || users.length === 0) {
+        alert(
+          "🛑 ஆபத்தான எச்சரிக்கை! (100% Safety Lock Enabled)\n\n" +
+          "உங்களின் கணினியில் மாணவர் தரவுகள் (Student Vault Records) எதுவும் இல்லை!\n\n" +
+          "இப்படியே கிளவுடில் சேமித்தால் கூகிளில் உள்ள தரவு அழிந்துவிடும், எனவே முதலில் '☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)' பொத்தானை அழுத்துங்கள்!"
         );
-        return confirmSave;
+        return false;
       }
       return true;
     }

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <!-- Website Favicon / Icon for Google Search & Browser Tabs -->
   <link rel="icon" href="IMG_3529.jpg" type="image/jpeg" />
   <link rel="shortcut icon" href="IMG_3529.jpg" type="image/jpeg" />
 
@@ -12,20 +11,145 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>மாணவர் உள்நுழைவு | தமிழாலயம் பாட்சுவல்பாக்</title>
   
-  <!-- Import Outfit and Inter fonts for premium typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Baloo+Thambi+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Baloo+Thambi+2:wght@500;600;700;800&family=Playfair+Display:wght@400;600;700&family=Marutham&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="baukasten.css?v=40001">
+  <style>
+    /* Animated Yellow & Green Spin Rings for Login Gate */
+    .gate-icon-wrapper {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 12px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  <link rel="stylesheet" href="baukasten.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Marutham&display=swap" rel="stylesheet">
+    .spinner-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      pointer-events: none;
+      transition: all 0.4s ease;
+    }
 
+    /* Default State: Rotating Yellow/Gold Ring */
+    .spinner-ring.yellow-spin {
+      border-top-color: #f5b041;
+      border-right-color: #f5b041;
+      border-bottom-color: rgba(245, 176, 65, 0.25);
+      border-left-color: rgba(245, 176, 65, 0.25);
+      animation: spinRing 2.2s linear infinite;
+      box-shadow: 0 0 18px rgba(245, 176, 65, 0.45);
+    }
 
+    /* Success Signal State: Glowing Green Rotating Ring */
+    .spinner-ring.green-spin {
+      border-top-color: #10b981;
+      border-right-color: #10b981;
+      border-bottom-color: #34d399;
+      border-left-color: rgba(16, 185, 129, 0.2);
+      animation: spinRing 0.6s linear infinite;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.9), inset 0 0 15px rgba(16, 185, 129, 0.5);
+    }
 
+    /* Stopped Green Ring State */
+    .spinner-ring.green-stopped {
+      border-color: #10b981;
+      animation: none;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 1), inset 0 0 20px rgba(16, 185, 129, 0.6);
+    }
+
+    @keyframes spinRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 3D Vault Door Animation */
+    .vault-perspective-box {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 460px;
+      margin: 20px auto;
+    }
+
+    .gate-card {
+      transform-origin: center left;
+      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease, box-shadow 0.5s ease;
+      backface-visibility: hidden;
+    }
+
+    .gate-card.vault-door-opening {
+      transform: rotateY(-90deg) scale(0.85);
+      opacity: 0;
+      box-shadow: -30px 0 50px rgba(0,0,0,0.4);
+      pointer-events: none;
+    }
+
+    /* Student Dashboard Reveal */
+    .docs-dashboard {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      gap: 20px;
+      transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+    }
+
+    .docs-dashboard.dashboard-revealing {
+      animation: popReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popReveal {
+      0% { transform: scale(0.92) translateY(24px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .portal-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-soft);
+      margin-bottom: 15px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .portal-tab {
+      padding: 12px 6px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+      font-family: var(--font-heading);
+    }
+    .portal-tab:hover { color: var(--text-main); }
+    .portal-tab.active { color: var(--primary); }
+    .portal-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 3.5px;
+      background: var(--grad-gold);
+      border-radius: 3px;
+    }
+    .portal-panel {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+    .portal-panel.active {
+      display: flex;
+    }
+  </style>
 </head>
 <body>
   
@@ -35,10 +159,18 @@
     <span class="music-icon">🎵</span>
   </button>
 
+  <!-- Glowing Motto Overlay Banner: "தமிழால் இணைவோம்" -->
+  <div id="motto-toast-overlay" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.7); background: linear-gradient(135deg, #6b0820 0%, #4a0315 100%); color: #ffffff; padding: 22px 42px; border-radius: 999px; border: 3.5px solid #f5b041; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 45px rgba(245, 176, 65, 0.7); z-index: 99999; text-align: center; pointer-events: none; opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #fce7b2; font-weight: 800; margin-bottom: 4px; font-family: var(--font-heading);">தமிழாலயம் பாட்சுவல்பாக்</div>
+    <div style="font-family: 'Marutham', 'Baloo Thambi 2', sans-serif; font-size: clamp(24px, 5vw, 36px); font-weight: 900; color: #ffffff; text-shadow: 0 0 15px rgba(245, 176, 65, 0.8); white-space: nowrap;">
+      ✨ "தமிழால் இணைவோம்" ✨
+    </div>
+  </div>
+
   <!-- Top Utility Bar -->
-      <div class="top-bar">
-    <div class="top-bar-content" style="justify-content: center;">
-      <div class="marquee-container" style="margin-right: 0; width: 100%; overflow: hidden; ">
+  <div class="top-bar">
+    <div class="top-bar-content">
+      <div class="marquee-container">
         <div class="marquee-track">
           <span class="marquee-text">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
           <span class="marquee-text" style="padding-left: 150px;">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
@@ -47,7 +179,7 @@
     </div>
   </div>
 
-        <!-- Main Brand Header -->
+  <!-- Main Brand Header -->
   <header class="brand-header">
     <div class="brand-header-content">
       <a href="index.html?v=1.1" class="brand-logo-container">
@@ -59,9 +191,8 @@
         </div>
       </a>
       
-      <!-- Right Side Contact Icons Widget -->
+      <!-- Contact Buttons -->
       <div class="header-contact-right">
-        <!-- WhatsApp -->
         <a href="https://wa.me/491783272302" id="header-whatsapp-link" class="header-contact-item notranslate" translate="no" target="_blank" title="WhatsApp">
           <span class="contact-icon">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="#25D366" style="display:block;">
@@ -71,7 +202,6 @@
           <span class="contact-value" id="header-whatsapp-val">thamilalayam</span>
         </a>
         
-        <!-- Email -->
         <a href="mailto:kontakt@thamilalayam.net" id="header-email-link" class="header-contact-item notranslate" translate="no" title="Email">
           <span class="contact-icon">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="#EA4335" style="display:block;">
@@ -81,7 +211,6 @@
           <span class="contact-value" id="header-email-text">thamilalayam@gmail.com</span>
         </a>
 
-        <!-- Facebook -->
         <a href="https://www.facebook.com/Thamilalayam/" id="header-facebook-link" class="header-contact-item notranslate" translate="no" target="_blank" title="Facebook">
           <span class="contact-icon">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2" style="display:block;">
@@ -94,20 +223,15 @@
     </div>
   </header>
 
-        <!-- Sticky Navigation Menu Bar -->
+  <!-- Sticky Navigation Menu Bar -->
   <nav class="main-navbar">
     <div class="nav-container">
-      <!-- Mobile Menu Toggle Button (Hamburger) -->
       <button class="mobile-menu-toggle" aria-label="Toggle Menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
       
-      <!-- Mobile App-like Centered Brand Title -->
-      
-      
-      <!-- Mobile Quick Student Login Icon Button -->
       <a href="login.html?v=1.1" class="mobile-quick-login" title="மாணவர் உள்நுழைவு">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="display:block;">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
@@ -115,12 +239,12 @@
       </a>
 
       <div class="nav-links">
-        <a href="index.html?v=1.1" class="nav-link " id="nav-home">முகப்பு</a>
-        <a href="events.html?v=1.1" class="nav-link " id="nav-events">நிகழ்வுகள்</a>
-        <a href="exams.html?v=1.1" class="nav-link " id="nav-exams">தேர்வுகள்</a>
+        <a href="index.html?v=1.1" class="nav-link" id="nav-home">முகப்பு</a>
+        <a href="events.html?v=1.1" class="nav-link" id="nav-events">நிகழ்வுகள்</a>
+        <a href="exams.html?v=1.1" class="nav-link" id="nav-exams">தேர்வுகள்</a>
         <a href="index.html#quick-links" class="nav-link" id="nav-links">இணைப்புகள்</a>
-        <a href="gallery.html?v=1.1" class="nav-link " id="nav-gallery">படங்கள்</a>
-        <a href="contact.html?v=1.1" class="nav-link " id="nav-contact">தொடர்புகளுக்கு</a>
+        <a href="gallery.html?v=1.1" class="nav-link" id="nav-gallery">படங்கள்</a>
+        <a href="contact.html?v=1.1" class="nav-link" id="nav-contact">தொடர்புகளுக்கு</a>
         <a href="login.html?v=1.1" class="nav-link active" id="nav-login">Login</a>
         <a href="admin.html" class="nav-link" id="nav-admin" style="display:none;">நிர்வாகம்</a>
       </div>
@@ -128,71 +252,99 @@
     </div>
   </nav>
 
-  <div class="container" style="max-width: 900px; width: 92%; margin: 30px auto; padding: 35px 30px; background: #ffffff; border-radius: 24px; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06); border: 1px solid rgba(128, 0, 32, 0.08);">
-    <!-- Title Area inside Page Container -->
-    <div class="title-area" style="text-align: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 25px;">
-      <h2 style="font-family: 'Marutham', sans-serif; font-size: clamp(26px, 5vw, 34px); color: #800020; font-weight: 800; margin: 0;">🎓 மாணவர் பக்கம் (Student Portal)</h2>
-      <p id="site-subtitle" style="font-family: 'Marutham', sans-serif; font-size: 16.5px; color: #800020; font-weight: 700; margin-top: 6px;">ஆவணக் காப்பகம் மற்றும் தனிப்பட்ட தரவுகள்</p>
-      
-      <!-- Decorative Shield Lock Crest Badge -->
-      <div id="status-badge" class="decorative-lock-badge" style="margin-top: 10px;">
-        <span class="lock-badge-icon">🛡️🔒</span>
-        <span class="lock-badge-text">பாதுகாக்கப்பட்ட பகுதி (Secure Vault)</span>
+  <!-- Page Main Section -->
+  <section class="bk-page-section" style="max-width: 960px;">
+    <!-- Lock status indicator -->
+    <div style="text-align: center; margin-bottom: 8px;">
+      <div id="status-badge" class="lock-status">
+        <span>🔒 பூட்டப்பட்டுள்ளது (Locked Vault)</span>
+      </div>
+    </div>
+    
+    <!-- Pre-Login Vault Perspective Box -->
+    <div class="vault-perspective-box">
+      <div id="gate-container" class="gate-card">
+        <!-- Interactive Ring Spinner & Lock Icon Ornament -->
+        <div class="gate-icon-wrapper">
+          <div id="ring-spinner" class="spinner-ring yellow-spin"></div>
+          <div class="gate-icon-ornament">
+            <div id="gate-icon-inner" class="gate-icon-inner">🔒</div>
+          </div>
+        </div>
+        
+        <h3>மாணவர் பக்கம் (Student Portal)</h3>
+        <p style="font-size: 14px; color: var(--text-muted); font-weight: 600; text-align: center; margin-bottom: 4px;">தொடர உங்கள் மாணவர் பெயர் மற்றும் கடவுச்சொல்லை உள்ளிடவும்.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:16px; text-align:left; width: 100%; margin-top: 10px;">
+          <div class="form-group">
+            <label for="vault-username">👤 மாணவர் பெயர் / ஐடி (Student Name / ID)</label>
+            <input type="text" id="vault-username" class="gate-input notranslate" translate="no" placeholder="உங்கள் மாணவர் பெயரை உள்ளிடவும்" onkeydown="if(event.key === 'Enter') document.getElementById('vault-passcode').focus()">
+          </div>
+          <div class="form-group">
+            <label for="vault-passcode">🔑 கடவுச்சொல் (Password)</label>
+            <input type="password" id="vault-passcode" class="gate-input notranslate" translate="no" placeholder="••••••••" onkeydown="if(event.key === 'Enter') checkUserLogin()">
+          </div>
+        </div>
+        
+        <button id="gate-submit-btn" class="gate-btn" onclick="checkUserLogin()">உள்நுழைக (Login)</button>
+        <p id="error-alert" class="error-msg">⚠️ தவறான மாணவர் பெயர் அல்லது கடவுச்சொல்!</p>
+        
+        <div style="text-align:center; margin-top: 6px;">
+          <a href="#" onclick="resetVaultCache(event)" style="font-size: 12.5px; color: var(--primary); text-decoration: none; font-weight: 700;">⚙️ தற்காலிகச் சேமிப்பை மீட்டமைக்க (Reset Cache)</a>
+        </div>
       </div>
     </div>
 
-    <!-- Login Box inside the Page Container -->
-    <div id="gate-container" class="gate-card" style="max-width: 450px; margin: 20px auto; padding: 32px 28px; background: #fefcf9; border: 1.5px solid rgba(128, 0, 32, 0.15); border-radius: 20px; box-shadow: 0 8px 25px rgba(128, 0, 32, 0.06);">
-      <div class="gate-icon-ornament">
-        <div class="gate-icon-inner">🔒</div>
-      </div>
-      
-      <p style="font-size: 13.5px; color: #475569; font-weight: 600; text-align: center; margin-bottom: 15px;">தொடர உங்கள் மாணவர் பெயர் மற்றும் கடவுச்சொல்லை வழங்கவும்.</p>
-      
-      <div style="display:flex; flex-direction:column; gap:14px; text-align:left; width: 100%;">
-        <div>
-          <label style="font-family: 'Marutham', sans-serif; font-size:13.5px; font-weight:700; color:#800020; margin-bottom:6px; display:block;">👤 மாணவர் பெயர் (Student Name / ID)</label>
-          <input type="text" id="vault-username" class="gate-input notranslate" translate="no" placeholder="உங்கள் மாணவர் பெயரை உள்ளிடவும்" onkeydown="if(event.key === 'Enter') document.getElementById('vault-passcode').focus()">
-        </div>
-        <div>
-          <label style="font-family: 'Marutham', sans-serif; font-size:13.5px; font-weight:700; color:#800020; margin-bottom:6px; display:block;">🔑 கடவுச்சொல் (Password)</label>
-          <input type="password" id="vault-passcode" class="gate-input notranslate" translate="no" placeholder="••••••••" onkeydown="if(event.key === 'Enter') checkUserLogin()">
-        </div>
-      </div>
-      
-      <button class="gate-btn" onclick="checkUserLogin()" style="width:100%; margin-top:16px; padding:13px; background:linear-gradient(135deg, #800020 0%, #45000e 100%); color:#ffffff; font-weight:700; font-size:15px; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 4px 12px rgba(128,0,32,0.2);">உள்நுழைக (Login)</button>
-      <p id="error-alert" class="error-msg" style="display:none; color:#dc2626; font-size:13px; font-weight:600; margin-top:10px; text-align:center;">⚠️ தவறான மாணவர் பெயர் அல்லது கடவுச்சொல்!</p>
-      <div style="text-align:center; margin-top: 10px;">
-        <a href="#" onclick="resetVaultCache(event)" style="font-size: 11.5px; color: #800020; text-decoration: none; display: inline-block;">⚠️ தற்காலிகச் சேமிப்பை மீட்டமைக்க (Reset Cache)</a>
-      </div>
-    </div>
-
-    <!-- Student Dashboard (Once Unlocked) -->
+    <!-- Student Dashboard (Post-Login Revealed) -->
     <div id="docs-container" class="docs-dashboard">
-      <div id="welcome-banner" class="welcome-banner">
-        <span>👋 அன்புடன் வரவேற்கிறோம், <strong id="user-display-name">...</strong>!</span>
-        <button class="btn-action" onclick="lockVault()">🚪 வெளியேறு (Logout)</button>
-      </div>
-
-      <!-- Tab Buttons -->
+      <!-- Top Tab Buttons -->
       <div class="portal-tabs">
         <button class="portal-tab active" onclick="switchPortalTab(this, 'panel-results')">📊 எனது விபரங்கள் (My Profile)</button>
         <button class="portal-tab" onclick="switchPortalTab(this, 'panel-files')">📂 பொதுவான கோப்புகள் (Downloads)</button>
       </div>
 
+      <!-- Student Banner ID Card -->
+      <div style="width: 100%; background: linear-gradient(135deg, #6b0820 0%, #4a0315 100%); color: white; border-radius: 20px; padding: 22px 28px; box-shadow: 0 10px 25px rgba(107, 8, 32, 0.15); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; text-align: left;">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="width: 58px; height: 58px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2.5px solid #f5b041; flex-shrink: 0;">🎓</div>
+          <div>
+            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #fce7b2; font-weight: 700; display: block; margin-bottom: 2px;">மாணவர் விபரங்கள்</span>
+            <h2 style="font-size: 23px; font-weight: 900; margin: 0; font-family: var(--font-heading); color:#ffffff;" id="user-display-name">மாணவர்</h2>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap;" id="student-badges-container">
+              <span style="background: rgba(255,255,255,0.18); font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 20px; color: #fff;" id="student-class-display">
+                🏫 வகுப்பு: 03
+              </span>
+              <span style="background: rgba(52,211,153,0.18); color: #34d399; font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 20px;">
+                ● நிலை: செயலில் (Active)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-action" style="background: rgba(255,255,255,0.18); color: #ffffff; border: 1px solid rgba(255,255,255,0.3); font-size: 13px; padding: 8px 18px; border-radius: 999px; cursor: pointer;" onclick="lockVault()">🚪 வெளியேறு (Logout)</button>
+      </div>
+
       <!-- Tab 1: Profile & Results -->
       <div id="panel-results" class="portal-panel active">
-        <div id="profile-data-container" style="width: 100%;"></div>
+        <div style="background: #ffffff; border: 1px solid var(--border-soft); border-radius: 20px; padding: 26px; box-shadow: var(--shadow-sm); width: 100%; text-align: left;">
+          <h3 style="font-family: var(--font-heading); font-size: 19px; color: var(--primary-dark); margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">📊 எனது தனிப்பட்ட விபரங்கள் (My Profile Results)</h3>
+          
+          <div id="profile-data-container" style="display: flex; flex-direction: column; gap: 20px; width: 100%;"></div>
+        </div>
       </div>
 
       <!-- Tab 2: Shared Files / Documents -->
       <div id="panel-files" class="portal-panel">
-        <div id="pdf-list-container" style="display:flex; flex-direction:column; gap:12px; width: 100%;">
-          <!-- Dynamically rendered -->
+        <div style="background: #ffffff; border: 1px solid var(--border-soft); border-radius: 20px; padding: 26px; box-shadow: var(--shadow-sm); width: 100%; text-align: left;">
+          <h3 style="font-family: var(--font-heading); font-size: 19px; color: var(--primary-dark); margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">📂 பொதுவான கோப்புகள் (Downloads & Documents)</h3>
+          
+          <div id="pdf-list-container" style="display:flex; flex-direction:column; gap:16px; width: 100%;">
+            <!-- Dynamically rendered -->
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Inline PDF Viewer Modal -->
   <div id="pdf-modal" class="view-modal">
@@ -214,56 +366,6 @@
   <!-- Include sports-config.js database -->
   <script src="sports-config.js?v=1785521173"></script>
   <script>
-    // Initialize Mobile Hamburger Menu
-    function initMobileMenu() {
-      const toggleBtn = document.querySelector('.mobile-menu-toggle');
-      const navLinks = document.querySelector('.nav-links');
-      if (toggleBtn && navLinks) {
-        toggleBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleBtn.classList.toggle('active');
-          navLinks.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on a link
-        const links = navLinks.querySelectorAll('.nav-link');
-        links.forEach(link => {
-          link.addEventListener('click', () => {
-            toggleBtn.classList.remove('active');
-            navLinks.classList.remove('active');
-          });
-        });
-        
-        // Close menu when clicking anywhere else
-        document.addEventListener('click', (e) => {
-          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
-            toggleBtn.classList.remove('active');
-            navLinks.classList.remove('active');
-          }
-        });
-      }
-    }
-
-    function toggleMusic() {
-      const audio = document.getElementById('bg-music');
-      const btn = document.getElementById('music-toggle-btn');
-      if (audio.paused) {
-        audio.play().then(() => {
-          btn.classList.add('playing');
-          btn.querySelector('.music-icon').textContent = '⏸️';
-        }).catch(e => {
-          console.error("Audio playback blocked:", e);
-          alert("இசையை இயக்க பிரவுசரின் ஏதேனும் ஒரு பகுதியில் கிளிக் செய்த பின் முயலவும்!");
-        });
-      } else {
-        audio.pause();
-        btn.classList.remove('playing');
-        btn.querySelector('.music-icon').textContent = '🎵';
-      }
-    }
-  </script>
-
-  <script>
     const DEFAULT_CONFIG = {
       titleTa: "தமிழாலயம் பாட்சுவல்பாக்",
       titleEn: "Thamilalayam Bad Schwalbach",
@@ -274,14 +376,7 @@
         logoUrl: "IMG_3529.jpg",
         scriptURL: "https://script.google.com/macros/s/AKfycbzd_5lljmz6NbUp4ZcEoXycZOWaK4IG5NVyAdPtG2BDwGfenirjW22dN6gZOMwKL1VslA/exec",
         adminPasscode: "admin123",
-        colors: {
-          bodyBgStart: "#0f172a",
-          bodyBgEnd: "#1e293b",
-          headerBgStart: "#0f172a",
-          headerBgEnd: "#1e3a8a",
-          accentColor: "#2563eb",
-          containerBg: "#ffffff"
-        },
+        colors: {},
         ageCategories: []
       },
       vaultConfig: {
@@ -302,7 +397,6 @@
           const parsed = JSON.parse(localData);
           if (typeof activeConfig !== 'undefined') activeConfig = parsed;
           if (typeof content !== 'undefined') content = parsed;
-          console.log("Loaded local preview draft");
         } catch (e) {
           console.error("Error reading localStorage content", e);
         }
@@ -312,10 +406,7 @@
         if (typeof content !== 'undefined') content = fresh;
       }
 
-      // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
-      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
-                        (typeof content !== 'undefined' && content && content.formConfig?.scriptURL) ||
-                        "";
+      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) || "";
       if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
@@ -324,21 +415,14 @@
         .then(res => res.json())
         .then(data => {
           if (data && data.portalGridConfig) {
-            console.log("Loaded fresh config dynamically from Google Cloud API");
             if (typeof activeConfig !== 'undefined') {
               activeConfig = data;
               if (typeof applyConfig !== 'undefined') applyConfig();
-              if (typeof populateCategories !== 'undefined') populateCategories();
             }
             if (typeof content !== 'undefined') {
               content = data;
             }
             updateCommonElements(data);
-            
-            // Special page re-renders
-            if (typeof renderEvents !== 'undefined') renderEvents();
-            if (typeof renderExams !== 'undefined') renderExams();
-            if (typeof renderGalleryPhotos !== 'undefined') renderGalleryPhotos();
           }
         })
         .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
@@ -346,34 +430,17 @@
 
       function updateCommonElements(data) {
         const logoUrl = data.logo || data.formConfig?.logoUrl || "IMG_3529.jpg";
-        const logoEl = document.getElementById("header-logo") || document.getElementById("siteLogo");
-        const navLogoEl = document.getElementById("nav-logo");
+        const logoEl = document.getElementById("header-logo");
         if (logoEl) logoEl.src = logoUrl;
-        if (navLogoEl) navLogoEl.src = logoUrl;
 
         const titleTaEl = document.getElementById("header-title-ta");
         const titleEnEl = document.getElementById("header-title-en");
-        const navBrandTitleEl = document.getElementById("nav-brand-title");
 
         const mainTitle = data.titleTa || data.formConfig?.title || "தமிழாலயம் பாட்சுவல்பாக்";
-        if (titleTaEl) {
-          titleTaEl.textContent = mainTitle;
-        }
+        if (titleTaEl) titleTaEl.textContent = mainTitle;
         if (titleEnEl) titleEnEl.textContent = data.titleEn || data.formConfig?.subtitle || "Thamilalayam Bad Schwalbach";
-        if (navBrandTitleEl) navBrandTitleEl.textContent = mainTitle.split(" ")[0] || "தமிழாலயம்";
 
-        // Apply colors dynamically
-        const root = document.documentElement;
-        const colors = data.colors || data.formConfig?.colors || {};
-        if (colors.bodyBgStart) root.style.setProperty('--body-bg-start', colors.bodyBgStart);
-        if (colors.bodyBgEnd) root.style.setProperty('--body-bg-end', colors.bodyBgEnd);
-        if (colors.headerBgStart) root.style.setProperty('--header-bg-start', colors.headerBgStart);
-        if (colors.headerBgEnd) root.style.setProperty('--header-bg-end', colors.headerBgEnd);
-        if (colors.accentColor) root.style.setProperty('--accent-color', colors.accentColor);
-        if (colors.containerBg) root.style.setProperty('--container-bg', colors.containerBg);
-
-        // Apply dynamic motto text
-        const mottoText = data.formConfig?.marqueeText || "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ் மொழி எங்கள் உயிராகும்!";
+        const mottoText = data.formConfig?.marqueeText || "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ்மொழி எங்கள் உயிராகும்!";
         const marqueeSpans = document.querySelectorAll('.marquee-text');
         if (marqueeSpans.length > 0) {
           const formatted = escapeHtml(mottoText)
@@ -391,52 +458,33 @@
     }
 
     function applyConfig() {
-      const colors = activeConfig.formConfig?.colors;
-      if (colors) {
-        const root = document.documentElement;
-        if (colors.bodyBgStart) root.style.setProperty('--bg-start', colors.bodyBgStart);
-        if (colors.bodyBgEnd) root.style.setProperty('--bg-end', colors.bodyBgEnd);
-        if (colors.headerBgStart) root.style.setProperty('--header-bg-start', colors.headerBgStart);
-        if (colors.headerBgEnd) root.style.setProperty('--header-bg-end', colors.headerBgEnd);
-        if (colors.accentColor) {
-          root.style.setProperty('--primary', colors.accentColor);
-          root.style.setProperty('--primary-hover', colors.accentColor + 'dd');
-        }
-        if (colors.containerBg) root.style.setProperty('--card-bg', colors.containerBg);
-      }
-
       const mainTitle = activeConfig.formConfig?.title || activeConfig.titleTa || "தமிழாலயம் பாட்சுவல்பாக்";
       const titleTaEl = document.getElementById('header-title-ta');
       const titleEnEl = document.getElementById('header-title-en');
       const logoEl = document.getElementById('header-logo');
 
-      if (titleTaEl) {
-          titleTaEl.textContent = mainTitle;
-        }
+      if (titleTaEl) titleTaEl.textContent = mainTitle;
       if (titleEnEl) titleEnEl.textContent = activeConfig.formConfig?.subtitle || activeConfig.titleEn || "Thamilalayam Bad Schwalbach";
       
       const logoUrl = activeConfig.formConfig?.logoUrl || activeConfig.logo || "IMG_3529.jpg";
       if (logoEl) logoEl.src = logoUrl;
 
-        // Apply dynamic motto text
-        const mottoText = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.marqueeText) || 
-                          (typeof content !== 'undefined' && content && content.formConfig?.marqueeText) || 
-                          "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ் மொழி எங்கள் உயிராகும்!";
-        const marqueeSpans = document.querySelectorAll('.marquee-text');
-        if (marqueeSpans.length > 0) {
-          const formatted = escapeHtml(mottoText)
-            .replace(/\\n/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/,\s*/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/&amp;nbsp;/g, '&nbsp;');
-          marqueeSpans.forEach(span => {
-            span.innerHTML = formatted;
-          });
-        }
+      const mottoText = activeConfig.formConfig?.marqueeText || "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ்மொழி எங்கள் உயிராகும்!";
+      const marqueeSpans = document.querySelectorAll('.marquee-text');
+      if (marqueeSpans.length > 0) {
+        const formatted = escapeHtml(mottoText)
+          .replace(/\\n/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
+          .replace(/,\s*/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
+          .replace(/&amp;nbsp;/g, '&nbsp;');
+        marqueeSpans.forEach(span => {
+          span.innerHTML = formatted;
+        });
+      }
     }
 
     function checkSessionStatus() {
       if (sessionStorage.getItem('isVaultUnlocked') === 'true') {
-        showDashboard();
+        showDashboardImmediate();
       } else {
         showGate();
       }
@@ -472,19 +520,83 @@
       );
 
       if (matchedUser) {
-        sessionStorage.setItem('isVaultUnlocked', 'true');
-        sessionStorage.setItem('vaultUsername', matchedUser.username);
-        document.getElementById('error-alert').style.display = 'none';
-        localStorage.removeItem('loginAttempts'); // Reset counter on success
-        showDashboard();
+        // 1. Transition Yellow Spinner Ring to Glowing GREEN Spinner Ring
+        const ring = document.getElementById('ring-spinner');
+        const iconInner = document.getElementById('gate-icon-inner');
+        const statusBadge = document.getElementById('status-badge');
+        const submitBtn = document.getElementById('gate-submit-btn');
+
+        if (ring) {
+          ring.className = 'spinner-ring green-spin';
+        }
+        if (statusBadge) {
+          statusBadge.innerHTML = '<span>🟢 சரிபார்க்கப்படுகிறது... (Verifying)</span>';
+          statusBadge.className = 'lock-status unlocked';
+        }
+        if (submitBtn) {
+          submitBtn.textContent = '🟢 சரிபார்க்கப்படுகிறது...';
+          submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        }
+
+        // 2. Green Ring spins for 4 seconds before stopping & revealing "தமிழால் இணைவோம்"
+        setTimeout(() => {
+          if (ring) {
+            ring.className = 'spinner-ring green-stopped';
+          }
+          if (iconInner) {
+            iconInner.textContent = '🔓';
+          }
+          if (statusBadge) {
+            statusBadge.innerHTML = '<span>✅ அனுமதி பெறப்பட்டது! (Access Granted)</span>';
+          }
+          if (submitBtn) {
+            submitBtn.textContent = '🔓 கதவு திறக்கப்படுகிறது...';
+          }
+
+          // 3. Reveal "தமிழால் இணைவோம்" Toast Banner for 3 seconds
+          const mottoToast = document.getElementById('motto-toast-overlay');
+          if (mottoToast) {
+            mottoToast.style.display = 'block';
+            setTimeout(() => {
+              mottoToast.style.opacity = '1';
+              mottoToast.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 50);
+          }
+
+          // 4. Play 3D Vault Door Opening Effect (rotateY -90deg)
+          const gateCard = document.getElementById('gate-container');
+          if (gateCard) {
+            gateCard.classList.add('vault-door-opening');
+          }
+          
+          // 5. Reveal Student Dashboard after 3 seconds of motto display (3000ms)
+          setTimeout(() => {
+            sessionStorage.setItem('isVaultUnlocked', 'true');
+            sessionStorage.setItem('vaultUsername', matchedUser.username);
+            document.getElementById('error-alert').style.display = 'none';
+            localStorage.removeItem('loginAttempts');
+            
+            showDashboard();
+
+            // Fade out "தமிழால் இணைவோம்" motto gracefully
+            if (mottoToast) {
+              mottoToast.style.opacity = '0';
+              mottoToast.style.transform = 'translate(-50%, -80%) scale(0.9)';
+              setTimeout(() => {
+                mottoToast.style.display = 'none';
+              }, 600);
+            }
+          }, 3000);
+
+        }, 4000);
+
       } else {
-        // Increment attempts on failure
         let attempts = parseInt(localStorage.getItem('loginAttempts') || '0') + 1;
         localStorage.setItem('loginAttempts', attempts);
         
         if (attempts >= 3) {
           localStorage.setItem('vaultLockout', 'true');
-          showGate(); // Re-render to show lockout message and disable inputs
+          showGate();
         } else {
           const remaining = 3 - attempts;
           const errEl = document.getElementById('error-alert');
@@ -495,16 +607,35 @@
       }
     }
 
-    function showDashboard() {
-      document.getElementById('gate-container').style.display = 'none';
-      document.getElementById('docs-container').style.display = 'flex';
+    function showDashboardImmediate() {
+      const gateCard = document.getElementById('gate-container');
+      if (gateCard) gateCard.style.display = 'none';
+      
+      const docsDash = document.getElementById('docs-container');
+      if (docsDash) {
+        docsDash.style.display = 'flex';
+        docsDash.style.opacity = '1';
+      }
       
       const username = sessionStorage.getItem('vaultUsername') || "மாணவர்";
       document.getElementById('user-display-name').textContent = username;
+      
+      renderUserProfile(username);
+      renderPdfs();
+    }
 
-      const badge = document.getElementById('status-badge');
-      badge.textContent = `🔓 மாணவர்: ${username}`;
-      badge.className = "lock-status unlocked";
+    function showDashboard() {
+      const gateCard = document.getElementById('gate-container');
+      if (gateCard) gateCard.style.display = 'none';
+      
+      const docsDash = document.getElementById('docs-container');
+      if (docsDash) {
+        docsDash.style.display = 'flex';
+        docsDash.classList.add('dashboard-revealing');
+      }
+      
+      const username = sessionStorage.getItem('vaultUsername') || "மாணவர்";
+      document.getElementById('user-display-name').textContent = username;
       
       renderUserProfile(username);
       renderPdfs();
@@ -519,11 +650,15 @@
         const examResults = matchedUser.examResults || "விபரங்கள் எதுவும் பதிவிடப்படவில்லை.";
         const tamilResults = matchedUser.tamilResults || "விபரங்கள் எதுவும் பதிவிடப்படவில்லை.";
         const otherDetails = matchedUser.otherDetails || "விபரங்கள் எதுவும் பதிவிடப்படவில்லை.";
-        
-        const fullName = matchedUser.fullName || matchedUser.username || "மாணவர்";
-        const studentClass = matchedUser.studentClass || "விபரம் இல்லை";
+        const studentClass = matchedUser.studentClass || "03";
+        const fullName = matchedUser.fullName || matchedUser.username || username;
 
-        // Parse structured exam results
+        const nameEl = document.getElementById('user-display-name');
+        if (nameEl) nameEl.textContent = fullName;
+        
+        const classEl = document.getElementById('student-class-display');
+        if (classEl) classEl.textContent = `🏫 வகுப்பு: ${studentClass}`;
+
         let examHtml = "";
         let examData = null;
         try {
@@ -534,54 +669,53 @@
 
         if (examResults.trim().startsWith('data:application/pdf;base64,')) {
           examHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
-              <h4 style="font-size:16px; font-weight:800; color:#1e3a8a; margin-bottom:15px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif; text-align: left;"><span style="color:var(--primary); font-size:18px;">📝</span> தேர்வுப் பெறுபேறுகள் (Exam Results PDF)</h4>
-              <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
-                <button type="button" class="btn-action btn-view" style="font-size: 13px; padding: 8px 16px; font-weight:700; cursor:pointer;" onclick="viewPdf('\${escapeJSVal(examResults)}', 'தேர்வுப் பெறுபேறுகள்')">👁️ தேர்வறிக்கையைக் காண்க</button>
-                <a class="btn-action btn-download" style="font-size: 13px; padding: 8px 16px; font-weight:700;" href="\${escapeHtml(examResults)}" download="தேர்வு_பெறுபேறுகள்.pdf">📥 பதிவிறக்கு</a>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span>📝</span> தேர்வுப் பெறுபேறுகள் (Exam Results PDF)</h4>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn-action btn-view" onclick="viewPdf('${escapeJSVal(examResults)}', 'தேர்வுப் பெறுபேறுகள்')">👁️ தேர்வறிக்கையைக் காண்க</button>
+                <a class="btn-action btn-download" href="${escapeHtml(examResults)}" download="தேர்வு_பெறுபேறுகள்.pdf">📥 பதிவிறக்கு</a>
               </div>
             </div>
           `;
         } else if (examData && examData.isStructured) {
           const year = escapeHtml(examData.year || "2026");
           examHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-              <h4 style="font-size:16px; font-weight:800; color:#1e3a8a; margin-bottom:15px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif;"><span style="color:var(--primary); font-size:18px;">📝</span> பொதுத்தேர்வு ${year} (General Exam ${year})</h4>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16.5px; font-weight:800; color:var(--primary-dark); margin-bottom:14px; display:flex; align-items:center; gap:8px;"><span>📝</span> பொதுத்தேர்வு ${year} (General Exam ${year})</h4>
               
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #f5f3ff; border: 1px solid #ddd6fe; padding: 10px 14px; border-radius: 10px;">
-                  <span style="font-weight: 700; color: #5b21b6; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">🗣️ பேசுதல் (Speaking)</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #5b21b6; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #c084fc; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(examData.speaking || '-')}</span>
+              <div style="display: flex; flex-direction: column; gap: 9px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 12px;">
+                  <span style="font-weight: 700; color: var(--text-heading); font-size: 14px;">🗣️ பேசுதல் (Speaking)</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #5b21b6; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #c084fc; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(examData.speaking || '-')}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfeff; border: 1px solid #a5f3fc; padding: 10px 14px; border-radius: 10px;">
-                  <span style="font-weight: 700; color: #083344; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">👂 கேட்டல் (Listening)</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #083344; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #22d3ee; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(examData.listening || '-')}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfeff; border: 1px solid #a5f3fc; padding: 10px 16px; border-radius: 12px;">
+                  <span style="font-weight: 700; color: #083344; font-size: 14px;">👂 கேட்டல் (Listening)</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #083344; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #22d3ee; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(examData.listening || '-')}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 14px; border-radius: 10px;">
-                  <span style="font-weight: 700; color: #14532d; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">📖 வாசித்தல் (Reading)</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #14532d; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #4ade80; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(examData.reading || '-')}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 16px; border-radius: 12px;">
+                  <span style="font-weight: 700; color: #14532d; font-size: 14px;">📖 வாசித்தல் (Reading)</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #14532d; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #4ade80; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(examData.reading || '-')}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #fff1f2; border: 1px solid #fecdd3; padding: 10px 14px; border-radius: 10px;">
-                  <span style="font-weight: 700; color: #881337; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">✍️ எழுதுதல் (Writing)</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #881337; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #fb7185; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(examData.writing || '-')}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #fff1f2; border: 1px solid #fecdd3; padding: 10px 16px; border-radius: 12px;">
+                  <span style="font-weight: 700; color: #881337; font-size: 14px;">✍️ எழுதுதல் (Writing)</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #881337; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #fb7185; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(examData.writing || '-')}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #fffbeb; border: 1px solid #fde68a; padding: 10px 14px; border-radius: 10px;">
-                  <span style="font-weight: 700; color: #78350f; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">🏅 தமிழ்மொழித் திறன் (Tamil Language Skill)</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #78350f; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #fbbf24; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(examData.skill || '-')}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #fffbeb; border: 1px solid #fde68a; padding: 10px 16px; border-radius: 12px;">
+                  <span style="font-weight: 700; color: #78350f; font-size: 14px;">🏅 தமிழ்மொழித் திறன் (Language Skill)</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #78350f; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #fbbf24; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(examData.skill || '-')}</span>
                 </div>
               </div>
             </div>
           `;
         } else {
           examHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);">
-              <h4 style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif;"><span style="color:var(--primary); font-size:18px;">📝</span> தேர்வுப் பெறுபேறுகள் (Exam Results)</h4>
-              <p style="font-size:14px; color:#000000; white-space:pre-line; line-height:1.65; padding-left: 5px;">${escapeHtml(examResults)}</p>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--primary); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:10px; display:flex; align-items:center; gap:8px;"><span>📝</span> தேர்வுப் பெறுபேறுகள் (Exam Results)</h4>
+              <p style="font-size:14.5px; color:var(--text-muted); white-space:pre-line; line-height:1.65;">${escapeHtml(examResults)}</p>
             </div>
           `;
         }
 
-        // Parse structured tamilResults
         let tamilHtml = "";
         let tamilData = null;
         try {
@@ -592,11 +726,11 @@
 
         if (tamilResults.trim().startsWith('data:application/pdf;base64,')) {
           tamilHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid #f59e0b; padding:20px; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
-              <h4 style="font-size:16px; font-weight:800; color:#b45309; margin-bottom:15px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif; text-align: left;"><span style="color:#f59e0b; font-size:18px;">🏆</span> தமிழ்த்திறன் போட்டி (Tamil Competition PDF)</h4>
-              <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
-                <button type="button" class="btn-action btn-view" style="font-size: 13px; padding: 8px 16px; font-weight:700; cursor:pointer;" onclick="viewPdf('\${escapeJSVal(tamilResults)}', 'தமிழ்த்திறன் போட்டி முடிவுகள்')">👁️ போட்டிப் பெறுபேற்றைக் காண்க</button>
-                <a class="btn-action btn-download" style="font-size: 13px; padding: 8px 16px; font-weight:700;" href="\${escapeHtml(tamilResults)}" download="தமிழ்த்திறன்_போட்டி_பெறுபேறுகள்.pdf">📥 பதிவிறக்கு</a>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--accent-gold-dark); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span>🏆</span> தமிழ்த்திறன் போட்டி (Tamil Competition PDF)</h4>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn-action btn-view" onclick="viewPdf('${escapeJSVal(tamilResults)}', 'தமிழ்த்திறன் போட்டி முடிவுகள்')">👁️ போட்டிப் பெறுபேற்றைக் காண்க</button>
+                <a class="btn-action btn-download" href="${escapeHtml(tamilResults)}" download="தமிழ்த்திறன்_போட்டி_பெறுபேறுகள்.pdf">📥 பதிவிறக்கு</a>
               </div>
             </div>
           `;
@@ -606,116 +740,100 @@
           items.forEach(item => {
             if (item.name || item.result) {
               itemsHtml += `
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #fffbeb; border: 1px solid #fde68a; padding: 10px 14px; border-radius: 10px; margin-bottom: 8px;">
-                  <span style="font-weight: 700; color: #b45309; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">🏆 ${escapeHtml(item.name)}</span>
-                  <span style="font-weight: 800; background: #ffffff; color: #b45309; padding: 4px 12px; border-radius: 8px; border: 1.5px solid #fbbf24; font-family: 'Outfit', sans-serif; font-size: 14px; min-width: 65px; text-align: center;">${escapeHtml(item.result || '-')}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #fffbeb; border: 1px solid #fde68a; padding: 10px 16px; border-radius: 12px; margin-bottom: 8px;">
+                  <span style="font-weight: 700; color: #b45309; font-size: 14px;">🏆 ${escapeHtml(item.name)}</span>
+                  <span style="font-weight: 800; background: #ffffff; color: #b45309; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #fbbf24; font-size: 13.5px; min-width: 80px; text-align: center;">${escapeHtml(item.result || '-')}</span>
                 </div>
               `;
             }
           });
 
           tamilHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid #f59e0b; padding:20px; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-              <h4 style="font-size:16px; font-weight:800; color:#b45309; margin-bottom:15px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif;"><span style="color:#f59e0b; font-size:18px;">🏆</span> தமிழ்த்திறன் போட்டி (Tamil Competition)</h4>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--accent-gold-dark); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:14px; display:flex; align-items:center; gap:8px;"><span>🏆</span> தமிழ்த்திறன் போட்டிகள் (Tamil Competition)</h4>
               <div style="display: flex; flex-direction: column;">
-                ${itemsHtml || '<div style="color:var(--text-muted); font-size:13px;">முடிவுகள் ஏதும் இல்லை.</div>'}
+                ${itemsHtml || '<div style="color:var(--text-muted); font-size:13.5px;">விபரங்கள் எதுவும் பதிவிடப்படவில்லை.</div>'}
               </div>
             </div>
           `;
         } else {
           tamilHtml = `
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid #f59e0b; padding:20px; border-radius:12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);">
-              <h4 style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif;"><span style="color:#f59e0b; font-size:18px;">🏆</span> தமிழ்த்திறன் போட்டிகள் (Tamil Competition)</h4>
-              <p style="font-size:14px; color:#000000; white-space:pre-line; line-height:1.65; padding-left: 5px;">${escapeHtml(tamilResults)}</p>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--accent-gold-dark); padding:20px; border-radius:16px; width: 100%;">
+              <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:10px; display:flex; align-items:center; gap:8px;"><span>🏆</span> தமிழ்த்திறன் போட்டிகள் (Tamil Competition)</h4>
+              <p style="font-size:14.5px; color:var(--text-muted); white-space:pre-line; line-height:1.65;">${escapeHtml(tamilResults)}</p>
             </div>
           `;
         }
 
         profileContainer.innerHTML = `
-          <!-- Beautiful Student ID Card -->
-          <div style="background: linear-gradient(135deg, #800020 0%, #4a0012 100%); color: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 12px 30px rgba(128,0,32,0.15); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; text-align: left;">
-            <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2.5px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px);">🎓</div>
-            <div style="flex: 1; min-width: 200px;">
-              <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.8; font-weight: 700; display: block; margin-bottom: 3px; font-family:'Outfit', sans-serif;">மாணவர் விபரங்கள்</span>
-              <h2 style="font-size: 22px; font-weight: 800; margin: 0; font-family: 'Outfit', sans-serif; letter-spacing: -0.3px; color:#ffffff;">${escapeHtml(fullName)}</h2>
-              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-                <span style="background: rgba(255,255,255,0.18); font-size: 12.5px; font-weight: 700; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; font-family:'Outfit', sans-serif;">
-                  🏫 வகுப்பு: ${escapeHtml(studentClass)}
-                </span>
-                <span style="background: rgba(52,211,153,0.18); color: #34d399; font-size: 12.5px; font-weight: 700; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; font-family:'Outfit', sans-serif;">
-                  ● நிலை: செயலில் (Active)
-                </span>
-              </div>
-            </div>
-          </div>
+          ${examHtml}
+          ${tamilHtml}
 
-          <div style="background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 20px; padding: 25px; text-align:left; box-shadow: 0 10px 25px rgba(0,0,0,0.02);">
-            <h3 style="font-family:'Outfit', sans-serif; font-size: 18px; color: #1e3a8a; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; display:flex; align-items:center; gap:8px;">📊 எனது தனிப்பட்ட விபரங்கள் (My Profile Results)</h3>
-            
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-              ${examHtml}
-              ${tamilHtml}
-
-              <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid #3b82f6; padding:20px; border-radius:12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);">
-                <h4 style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'Outfit', sans-serif;"><span style="color:#3b82f6; font-size:18px;">💡</span> இதர குறிப்புகள் / அறிவிப்புகள் (Other Remarks)</h4>
-                <p style="font-size:14px; color:#000000; white-space:pre-line; line-height:1.65; padding-left: 5px;">${escapeHtml(otherDetails)}</p>
-              </div>
-            </div>
+          <div style="background:#ffffff; border:1px solid #e2e8f0; border-left: 5px solid var(--accent-teal); padding:20px; border-radius:16px; width: 100%;">
+            <h4 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin-bottom:10px; display:flex; align-items:center; gap:8px;"><span>💡</span> இதர குறிப்புகள் / அறிவிப்புகள் (Other Remarks)</h4>
+            <p style="font-size:14.5px; color:var(--text-muted); white-space:pre-line; line-height:1.65;">${escapeHtml(otherDetails)}</p>
           </div>
         `;
       } else {
-        profileContainer.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">மாணவர் விபரங்களை வாசிக்க முடியவில்லை.</div>';
+        profileContainer.innerHTML = '<div style="padding:30px; text-align:center; color:var(--text-muted); font-style:italic;">மாணவர் விபரங்களை வாசிக்க முடியவில்லை.</div>';
       }
     }
 
     function showGate() {
-      document.getElementById('gate-container').style.display = 'flex';
-      document.getElementById('docs-container').style.display = 'none';
+      const gateCard = document.getElementById('gate-container');
+      if (gateCard) {
+        gateCard.style.display = 'flex';
+        gateCard.classList.remove('vault-door-opening');
+      }
       
-      const badge = document.getElementById('status-badge');
+      const docsDash = document.getElementById('docs-container');
+      if (docsDash) {
+        docsDash.style.display = 'none';
+        docsDash.classList.remove('dashboard-revealing');
+      }
+
+      const ring = document.getElementById('ring-spinner');
+      const iconInner = document.getElementById('gate-icon-inner');
+      const statusBadge = document.getElementById('status-badge');
+      const submitBtn = document.getElementById('gate-submit-btn');
+
+      if (ring) ring.className = 'spinner-ring yellow-spin';
+      if (iconInner) iconInner.textContent = '🔒';
+      if (statusBadge) {
+        statusBadge.innerHTML = '<span>🔒 பூட்டப்பட்டுள்ளது (Locked Vault)</span>';
+        statusBadge.className = 'lock-status';
+      }
+      if (submitBtn) {
+        submitBtn.textContent = 'உள்நுழைக (Login)';
+        submitBtn.style.background = 'var(--grad-hero)';
+      }
+      
       const isLockedOut = localStorage.getItem('vaultLockout') === 'true';
       
       if (isLockedOut) {
-        badge.textContent = "🔒 முடக்கப்பட்டுள்ளது (Locked Out)";
-        badge.className = "lock-status";
-        badge.style.background = "rgba(239, 68, 68, 0.1)";
-        badge.style.color = "#ef4444";
-        badge.style.border = "1px solid rgba(239, 68, 68, 0.3)";
-        
         const errEl = document.getElementById('error-alert');
         errEl.innerHTML = "⚠️ தவறான முறையில் 3 முறை உள்நுழைய முயற்சித்ததால் பாதுகாப்பு காரணங்களுக்காக உங்களது பக்கம் முடக்கப்பட்டுள்ளது. தயவுசெய்து பின்வரும் தொலைபேசி எண்ணைத் தொடர்பு கொள்ளவும்: <strong>0177 5333097</strong>";
         errEl.style.display = 'block';
         
         document.getElementById('vault-username').disabled = true;
         document.getElementById('vault-passcode').disabled = true;
-        const btn = document.querySelector('.gate-btn');
-        if (btn) {
-          btn.disabled = true;
-          btn.style.opacity = '0.5';
-          btn.style.cursor = 'not-allowed';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.5';
+          submitBtn.style.cursor = 'not-allowed';
         }
       } else {
-        badge.textContent = "🔒 பூட்டப்பட்டுள்ளது (Locked)";
-        badge.className = "lock-status";
-        badge.style.background = "";
-        badge.style.color = "";
-        badge.style.border = "";
-        
         document.getElementById('vault-username').disabled = false;
         document.getElementById('vault-passcode').disabled = false;
-        const btn = document.querySelector('.gate-btn');
-        if (btn) {
-          btn.disabled = false;
-          btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.cursor = 'pointer';
         }
       }
       
       document.getElementById('vault-username').value = '';
       document.getElementById('vault-passcode').value = '';
-      if (!isLockedOut) {
-        document.getElementById('vault-username').focus();
-      }
     }
 
     function lockVault() {
@@ -731,13 +849,14 @@
       const pdfs = activeConfig.vaultConfig?.pdfs || [];
 
       if (pdfs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px; font-style:italic;">
-          பதிவேற்றப்பட்ட ஆவணங்கள் எதுவும் இல்லை.
-        </div>`;
+        container.innerHTML = `
+          <div style="text-align:center; color:var(--text-muted); padding:30px 20px; font-style:italic; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 16px;">
+            <div style="font-size: 32px; margin-bottom: 8px;">📂</div>
+            பதிவேற்றப்பட்ட ஆவணங்கள் எதுவும் இல்லை.
+          </div>`;
         return;
       }
 
-      // Migrate flat structure to grouped structure dynamically for backwards compatibility
       pdfs.forEach(group => {
         if (!group.files) {
           group.files = [{
@@ -749,35 +868,43 @@
 
       pdfs.forEach(group => {
         const card = document.createElement('div');
-        card.className = 'doc-card';
-        card.style.display = 'flex';
-        card.style.flexDirection = 'column';
-        card.style.alignItems = 'stretch';
-        card.style.gap = '12px';
-        card.style.padding = '20px';
+        card.style.cssText = `
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-left: 5px solid var(--primary);
+          border-radius: 16px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+          width: 100%;
+        `;
         
         let filesHtml = '';
         group.files.forEach(file => {
           filesHtml += `
-            <div class="doc-file-row" style="margin-top: 6px;">
-              <span style="font-weight: 600; font-size: 13.5px; display: flex; align-items: center; gap: 6px; color: #0f172a;">📄 ${escapeHtml(file.name)}</span>
-              <div style="display: flex; gap: 8px;">
-                <button class="btn-action btn-view" style="font-size: 11px; padding: 6px 12px;" onclick="viewPdf('${file.filename}', '${escapeJSVal(file.name)}')">👁️ பார்வை</button>
-                <a class="btn-action btn-download" style="font-size: 11px; padding: 6px 12px;" href="${file.filename}" download="${file.filename.startsWith('data:') ? escapeHtml(file.name) + '.pdf' : file.filename}">📥 பதிவிறக்கு</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; flex-wrap: wrap; gap: 10px;">
+              <span style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 10px; color: var(--text-heading);">
+                <span style="font-size: 18px; color: #ef4444;">📄</span> ${escapeHtml(file.name)}
+              </span>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn-action btn-view" style="font-size: 13px; padding: 8px 16px; font-weight: 700; cursor: pointer; border-radius: 999px; background: var(--primary-tint); color: var(--primary); border: 1px solid rgba(200,29,79,0.15);" onclick="viewPdf('${file.filename}', '${escapeJSVal(file.name)}')">👁️ பார்வை</button>
+                <a class="btn-action btn-download" style="font-size: 13px; padding: 8px 16px; font-weight: 700; border-radius: 999px; background: var(--grad-hero); color: #ffffff; text-decoration: none; box-shadow: 0 4px 12px rgba(200,29,79,0.25);" href="${file.filename}" download="${file.filename.startsWith('data:') ? escapeHtml(file.name) + '.pdf' : file.filename}">📥 பதிவிறக்கு</a>
               </div>
             </div>
           `;
         });
 
         card.innerHTML = `
-          <div class="doc-info" style="border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; margin-bottom: 5px; display: flex; align-items: center;">
-            <div class="doc-pdf-icon" style="font-size: 24px; width: 44px; height: 44px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); color: #10b981; display:flex; align-items:center; justify-content:center;">📁</div>
-            <div class="doc-details" style="text-align: left; margin-left: 12px;">
-              <h4 style="font-size: 16px; font-weight: bold; color: var(--primary); margin:0;">${escapeHtml(group.title)}</h4>
-              <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">${escapeHtml(group.description || '')}</p>
+          <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(200,29,79,0.08); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📁</div>
+            <div>
+              <h4 style="font-size: 17px; font-weight: 800; color: var(--primary-dark); margin:0;">${escapeHtml(group.title)}</h4>
+              ${group.description ? `<p style="font-size: 13px; color: var(--text-muted); margin: 3px 0 0 0;">${escapeHtml(group.description)}</p>` : ''}
             </div>
           </div>
-          <div class="doc-files-list">
+          <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
             ${filesHtml}
           </div>
         `;
@@ -812,9 +939,8 @@
     function resetVaultCache(event) {
       event.preventDefault();
       
-      // Ask for admin passcode before clearing cache/lockout
       const passcode = prompt("தற்காலிகச் சேமிப்பை மீட்டமைக்க மற்றும் லாக்அவுட்டை நீக்க நிர்வாக கடவுச்சொல்லை உள்ளிடவும் (Enter Admin Passcode):");
-      if (passcode === null) return; // User cancelled
+      if (passcode === null) return;
       
       const correctPasscode = activeConfig.formConfig?.adminPasscode || "admin123";
       if (passcode.trim() !== correctPasscode.trim()) {
@@ -832,27 +958,16 @@
     }
 
     loadConfig();
-  
-    // Admin hidden navigation shortcut helper
+
     function initAdminShortcut() {
       const isAdmin = sessionStorage.getItem('isAdminLoggedIn') === 'true' || window.location.search.includes('admin');
       
-      // Show navigation links if logged in or URL has ?admin
       const navAdmin = document.getElementById('nav-admin');
       if (navAdmin && isAdmin) {
         navAdmin.style.display = 'inline-block';
       }
-      const topAdmin = document.getElementById('top-admin');
-      if (topAdmin && isAdmin) {
-        topAdmin.style.display = 'inline-block';
-      }
-      const portalAdmin = document.getElementById('portal-admin-card');
-      if (portalAdmin && isAdmin) {
-        portalAdmin.style.display = 'flex';
-      }
 
-      // Add double click on logo to open admin panel
-      const logoEl = document.getElementById('header-logo') || document.getElementById('nav-logo');
+      const logoEl = document.getElementById('header-logo');
       if (logoEl) {
         logoEl.style.cursor = 'pointer';
         logoEl.addEventListener('dblclick', () => {
@@ -860,22 +975,18 @@
         });
       }
       
-      // Hidden copyright link in footer
       const footerText = document.querySelector('footer p');
       if (footerText) {
         footerText.innerHTML = footerText.innerHTML.replace('©', '<span style="cursor:default;" onclick="location.href=\'admin.html\'">©</span>');
       }
     }
     
-    // Run shortcut initializer
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initAdminShortcut);
     } else {
       initAdminShortcut();
     }
 
-  
-    // Initialize Mobile Hamburger Menu
     function initMobileMenu() {
       const toggleBtn = document.querySelector('.mobile-menu-toggle');
       const navLinks = document.querySelector('.nav-links');
@@ -886,7 +997,6 @@
           navLinks.classList.toggle('active');
         });
         
-        // Close menu when clicking on a link
         const links = navLinks.querySelectorAll('.nav-link');
         links.forEach(link => {
           link.addEventListener('click', () => {
@@ -895,7 +1005,6 @@
           });
         });
         
-        // Close menu when clicking anywhere else
         document.addEventListener('click', (e) => {
           if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
             toggleBtn.classList.remove('active');
@@ -923,7 +1032,5 @@
       }
     }
   </script>
-
-
 </body>
 </html>
