@@ -251,6 +251,7 @@
         if (typeof activeConfig !== 'undefined') activeConfig = fresh;
         if (typeof content !== 'undefined') content = fresh;
       }
+      activeConfig = safeMergeConfig(window.siteContent || {}, activeConfig);
 
       // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
       let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
@@ -259,26 +260,28 @@
       if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
+      function safeMergeConfig(local, cloud) {
+        if (!cloud) return local || {};
+        if (!local) return cloud;
+        const merged = Object.assign({}, local, cloud);
+        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections) && cloud.examsConfig.sections.length > 0) {
+          merged.examsConfig = cloud.examsConfig;
+        } else if (local.examsConfig) {
+          merged.examsConfig = local.examsConfig;
+        }
+        return merged;
+      }
+
       if (scriptURL && !isDraftPreview) {
         fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
-          if (data && data.portalGridConfig) {
+          if (data) {
             console.log("Loaded fresh config dynamically from Google Cloud API");
-            if (typeof activeConfig !== 'undefined') {
-              activeConfig = data;
-              if (typeof applyConfig !== 'undefined') applyConfig();
-              if (typeof populateCategories !== 'undefined') populateCategories();
-            }
-            if (typeof content !== 'undefined') {
-              content = data;
-            }
-            updateCommonElements(data);
-            
-            // Special page re-renders
-            if (typeof renderEvents !== 'undefined') renderEvents();
-            if (typeof renderExams !== 'undefined') renderExams();
-            if (typeof renderGalleryPhotos !== 'undefined') renderGalleryPhotos();
+            const merged = safeMergeConfig(window.siteContent || {}, data);
+            activeConfig = merged;
+            updateCommonElements(merged);
+            if (typeof window.renderExams === 'function') window.renderExams(merged);
           }
         })
         .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
@@ -340,7 +343,6 @@
         const logoUrl = activeConfig.formConfig?.logoUrl || activeConfig.logo || "IMG_3529.jpg";
         if (logoEl) logoEl.src = logoUrl;
 
-        
         // Apply dynamic motto text
         const mottoText = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.marqueeText) || 
                           (typeof content !== 'undefined' && content && content.formConfig?.marqueeText) || 
@@ -355,8 +357,6 @@
             span.innerHTML = formatted;
           });
         }
-        
-        
 
         // Apply contact coordinates dynamically in header
         const globalContact = activeConfig.contactConfig || (typeof content !== 'undefined' ? content.contactConfig : null);
@@ -404,33 +404,48 @@
         }
 
         // Render dynamic exams content
-        const examsContainer = document.getElementById('exams-container');
-        if (examsContainer && activeConfig.examsConfig) {
-          const examsData = activeConfig.examsConfig;
-          let html = `<h2 class="title-h1" id="exams-page-title">${escapeHtml(examsData.title || 'தமிழாலயத் தேர்வுகள்')}</h2>`;
-          
-          if (examsData.sections && examsData.sections.length > 0) {
-            examsData.sections.forEach(section => {
-              html += `
-                <div class="exam-section">
-                  <h3>${escapeHtml(section.title)}</h3>
-                  <p style="white-space: pre-line;">${escapeHtml(section.content)}</p>
-                </div>
-              `;
-            });
-          }
-          
-          html += `
-            <div class="exam-section" style="background: rgba(185, 28, 28, 0.05); border-color: rgba(185, 28, 28, 0.2);">
-              <h3>🔑 தேர்வுப் பெறுபேறு  அறியும் வழிமுறை:</h3>
-              <p>மாணவர்கள் மற்றும் பெற்றோர்கள் தங்களுக்கு வழங்கப்பட்ட பயனர் பெயர் (Username) மற்றும் கடவுச்சொல் (Password) மூலம் <strong>'உள்நுழைவு' (Login)</strong> பக்கத்திற்குச் சென்று தங்களுடைய தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறிந்து கொள்ளலாம்.</p>
-            </div>
-          `;
-          
-          examsContainer.innerHTML = html;
+        if (typeof window.renderExams === 'function') {
+          window.renderExams(activeConfig);
         }
       }
     });
+
+    // Global window.renderExams definition
+    window.renderExams = function(configData) {
+      const cfg = configData || activeConfig || window.siteContent || {};
+      const examsContainer = document.getElementById('exams-container');
+      if (!examsContainer) return;
+
+      const examsData = cfg.examsConfig || (window.siteContent && window.siteContent.examsConfig) || { title: 'தமிழாலயத் தேர்வுகள்', sections: [] };
+      let html = `<h2 class="title-h1" id="exams-page-title">${escapeHtml(examsData.title || 'தமிழாலயத் தேர்வுகள்')}</h2>`;
+      
+      if (examsData.sections && examsData.sections.length > 0) {
+        examsData.sections.forEach(section => {
+          html += `
+            <div class="exam-section">
+              <h3>${escapeHtml(section.title)}</h3>
+              <p style="white-space: pre-line;">${escapeHtml(section.content)}</p>
+            </div>
+          `;
+        });
+      } else {
+        html += `
+          <div class="exam-section">
+            <h3>தேர்வுப் பெறுபேறுகள் மற்றும் அறிவிப்புகள்</h3>
+            <p>தமிழாலயத்தின் வருடாந்தப் பொதுத்தேர்வுகள் மற்றும் பருவத் தேர்வுகள் பற்றிய செய்திகள் மற்றும் அறிவிப்புகள் இங்கு உடனுக்குடன் தோன்றும்.</p>
+          </div>
+        `;
+      }
+      
+      html += `
+        <div class="exam-section" style="background: rgba(185, 28, 28, 0.05); border-color: rgba(185, 28, 28, 0.2);">
+          <h3>🔑 தேர்வுப் பெறுபேறு அறியும் வழிமுறை:</h3>
+          <p>மாணவர்கள் மற்றும் பெற்றோர்கள் தங்களுக்கு வழங்கப்பட்ட பயனர் பெயர் (Username) மற்றும் கடவுச்சொல் (Password) மூலம் <strong>'உள்நுழைவு' (Login)</strong> பக்கத்திற்குச் சென்று தங்களுடைய தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறிந்து கொள்ளலாம்.</p>
+        </div>
+      `;
+      
+      examsContainer.innerHTML = html;
+    };
   
     // Admin hidden navigation shortcut helper
     function initAdminShortcut() {

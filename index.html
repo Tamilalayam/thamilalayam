@@ -245,9 +245,9 @@
         fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
-          if (data && data.portalGridConfig) {
+          if (data) {
             console.log("Loaded fresh config dynamically from Google Cloud API");
-            content = data;
+            content = Object.assign({}, window.siteContent || {}, data);
             updatePageElements(content);
           }
         })

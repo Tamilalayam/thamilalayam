@@ -145,8 +145,37 @@ a { color: inherit; }
 .contact-value { font-size: 12.5px; font-weight: 700; color: #fff; }
 
 @media (max-width: 640px) {
-  .header-contact-right { display: none; }
-  .brand-header-content { gap: 14px; }
+  .brand-header-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 8px !important;
+    padding: 12px 14px !important;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .header-contact-right {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 4px !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  .header-contact-item {
+    padding: 5px 10px !important;
+    font-size: 11.5px !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  }
+  .contact-value {
+    font-size: 11px !important;
+  }
   .main-logo { width: 54px; height: 54px; }
 }
 

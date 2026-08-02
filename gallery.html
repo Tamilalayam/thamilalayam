@@ -203,6 +203,7 @@
         if (typeof activeConfig !== 'undefined') activeConfig = fresh;
         if (typeof content !== 'undefined') content = fresh;
       }
+      activeConfig = safeMergeConfig(window.siteContent || {}, activeConfig);
 
       // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
       let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
@@ -211,26 +212,32 @@
       if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
+      function safeMergeConfig(local, cloud) {
+        if (!cloud) return local || {};
+        if (!local) return cloud;
+        const merged = Object.assign({}, local, cloud);
+        const cloudHasPhotos = cloud.galleryConfig && (
+          (Array.isArray(cloud.galleryConfig.albums) && cloud.galleryConfig.albums.length > 0) ||
+          (Array.isArray(cloud.galleryConfig.photos) && cloud.galleryConfig.photos.length > 0)
+        );
+        if (cloudHasPhotos) {
+          merged.galleryConfig = cloud.galleryConfig;
+        } else if (local.galleryConfig) {
+          merged.galleryConfig = local.galleryConfig;
+        }
+        return merged;
+      }
+
       if (scriptURL && !isDraftPreview) {
         fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
-          if (data && data.portalGridConfig) {
+          if (data) {
             console.log("Loaded fresh config dynamically from Google Cloud API");
-            if (typeof activeConfig !== 'undefined') {
-              activeConfig = data;
-              if (typeof applyConfig !== 'undefined') applyConfig();
-              if (typeof populateCategories !== 'undefined') populateCategories();
-            }
-            if (typeof content !== 'undefined') {
-              content = data;
-            }
-            updateCommonElements(data);
-            
-            // Special page re-renders
-            if (typeof renderEvents !== 'undefined') renderEvents();
-            if (typeof renderExams !== 'undefined') renderExams();
-            if (typeof renderGalleryPhotos !== 'undefined') renderGalleryPhotos();
+            const merged = safeMergeConfig(window.siteContent || {}, data);
+            activeConfig = merged;
+            updateCommonElements(merged);
+            if (typeof window.renderGalleryPhotos === 'function') window.renderGalleryPhotos(merged);
           }
         })
         .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
@@ -259,8 +266,6 @@
         const colors = data.colors || data.formConfig?.colors || {};
         if (colors.bodyBgStart) root.style.setProperty('--body-bg-start', colors.bodyBgStart);
         if (colors.bodyBgEnd) root.style.setProperty('--body-bg-end', colors.bodyBgEnd);
-        if (colors.headerBgStart) root.style.setProperty('--header-bg-start', colors.headerBgStart);
-        if (colors.headerBgEnd) root.style.setProperty('--header-bg-end', colors.headerBgEnd);
         if (colors.accentColor) root.style.setProperty('--accent-color', colors.accentColor);
         if (colors.containerBg) root.style.setProperty('--container-bg', colors.containerBg);
 
@@ -276,6 +281,10 @@
             span.innerHTML = formatted;
           });
         }
+      }
+
+      if (!activeConfig && window.siteContent) {
+        activeConfig = window.siteContent;
       }
 
       if (activeConfig) {
@@ -301,6 +310,29 @@
           });
         }
 
+        // Apply contact coordinates dynamically in header
+        const globalContact = activeConfig.contactConfig || (typeof content !== 'undefined' ? content.contactConfig : null);
+        if (globalContact) {
+          const headerWaLink = document.getElementById('header-whatsapp-link');
+          const headerEmailLink = document.getElementById('header-email-link');
+          const headerFbLink = document.getElementById('header-facebook-link');
+          
+          if (globalContact.whatsapp && headerWaLink) {
+            const rawWa = globalContact.whatsapp.replace(/\+/g, '').replace(/\s+/g, '');
+            headerWaLink.href = 'https://wa.me/' + rawWa;
+          }
+          if (globalContact.email && headerEmailLink) {
+            headerEmailLink.href = 'mailto:' + globalContact.email;
+          }
+          if (globalContact.facebook && headerFbLink) {
+            let fb = globalContact.facebook.trim();
+            if (!fb.startsWith('http')) {
+              fb = 'https://www.facebook.com/' + fb;
+            }
+            headerFbLink.href = fb;
+          }
+        }
+
         // Set colors
         const colors = activeConfig.formConfig?.colors;
         if (colors) {
@@ -314,54 +346,8 @@
           if (colors.containerBg) root.style.setProperty('--card-bg', colors.containerBg);
         }
 
-        // Apply dynamic photos
-        const galleryTitle = document.getElementById('gallery-page-title');
-        const container = document.getElementById('gallery-container');
-        const config = activeConfig.galleryConfig;
-
-        if (config) {
-          if (galleryTitle && config.title) galleryTitle.textContent = config.title;
-          
-          let albums = config.albums;
-          if (!albums || albums.length === 0) {
-            // Fallback for old photos to group into a default album
-            const oldPhotos = config.photos || [];
-            if (oldPhotos.length > 0) {
-              albums = [{
-                id: "default_album",
-                title: config.title || "படங்கள்",
-                description: "புகைப்படத் தொகுப்பு",
-                photos: oldPhotos
-              }];
-            } else {
-              albums = [];
-            }
-          }
-          
-          activeAlbums = albums; // Store globally
-
-          if (albums.length === 0) {
-            container.innerHTML = `<div style="padding: 40px; color: var(--text-muted); font-style: italic; text-align: center; grid-column: 1/-1;">ஆல்பங்கள் இன்னும் பதிவேற்றப்படவில்லை. (No albums available)</div>`;
-          } else {
-            let html = '';
-            albums.forEach((album, albumIdx) => {
-              const coverPhoto = (album.photos && album.photos.length > 0) ? album.photos[0].filename : 'IMG_3529.jpg';
-              const count = (album.photos) ? album.photos.length : 0;
-              html += `
-                <div class="gallery-item" onclick="openAlbum(${albumIdx})">
-                  <div class="gallery-image-wrapper">
-                    <img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(album.title)}" onerror="this.src='IMG_3529.jpg'">
-                  </div>
-                  <div class="gallery-caption" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 10px;">
-                    <span style="font-weight: 800; font-size: 14.5px;">${escapeHtml(album.title)}</span>
-                    <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">${escapeHtml(album.description || '')}</span>
-                    <span style="align-self: center; background: rgba(128, 0, 32, 0.08); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 4px;">${count} படங்கள் (Photos)</span>
-                  </div>
-                </div>
-              `;
-            });
-            container.innerHTML = html;
-          }
+        if (typeof window.renderGalleryPhotos === 'function') {
+          window.renderGalleryPhotos(activeConfig);
         }
 
         // Dynamically update footer name
@@ -372,6 +358,60 @@
       }
       initAdminShortcut();
     });
+
+    // Global window.renderGalleryPhotos definition
+    window.renderGalleryPhotos = function(configData) {
+      const cfg = configData || activeConfig || window.siteContent || {};
+      const container = document.getElementById('gallery-container') || document.getElementById('gallery-grid');
+      const galleryTitle = document.getElementById('gallery-page-title');
+      if (!container) return;
+
+      const config = cfg.galleryConfig || (window.siteContent && window.siteContent.galleryConfig);
+
+      if (config) {
+        if (galleryTitle && config.title) galleryTitle.textContent = config.title;
+        
+        let albums = config.albums;
+        if (!albums || albums.length === 0) {
+          const oldPhotos = config.photos || [];
+          if (oldPhotos.length > 0) {
+            albums = [{
+              id: "default_album",
+              title: config.title || "படங்கள்",
+              description: "புகைப்படத் தொகுப்பு",
+              photos: oldPhotos
+            }];
+          } else {
+            albums = [];
+          }
+        }
+        
+        activeAlbums = albums; // Store globally
+
+        if (albums.length === 0) {
+          container.innerHTML = `<div style="padding: 40px; color: var(--text-muted); font-style: italic; text-align: center; grid-column: 1/-1;">ஆல்பங்கள் இன்னும் பதிவேற்றப்படவில்லை. (No albums available)</div>`;
+        } else {
+          let html = '';
+          albums.forEach((album, albumIdx) => {
+            const coverPhoto = (album.photos && album.photos.length > 0) ? album.photos[0].filename : 'IMG_3529.jpg';
+            const count = (album.photos) ? album.photos.length : 0;
+            html += `
+              <div class="gallery-item" onclick="openAlbum(${albumIdx})">
+                <div class="gallery-image-wrapper">
+                  <img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(album.title)}" onerror="this.src='IMG_3529.jpg'">
+                </div>
+                <div class="gallery-caption" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 10px;">
+                  <span style="font-weight: 800; font-size: 14.5px;">${escapeHtml(album.title)}</span>
+                  <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">${escapeHtml(album.description || '')}</span>
+                  <span style="align-self: center; background: rgba(128, 0, 32, 0.08); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 4px;">${count} படங்கள் (Photos)</span>
+                </div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        }
+      }
+    };
 
     function initAdminShortcut() {
       const isAdmin = sessionStorage.getItem('isAdminLoggedIn') === 'true' || window.location.search.includes('admin');

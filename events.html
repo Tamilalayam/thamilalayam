@@ -174,6 +174,7 @@
           }
         });
       }
+    }
     
 
     function toggleMusic() {
@@ -233,6 +234,18 @@
           document.addEventListener('touchstart', startPlay);
         });
       }
+      function safeMergeConfig(local, cloud) {
+        if (!cloud) return local || {};
+        if (!local) return cloud;
+        const merged = Object.assign({}, local, cloud);
+        if (cloud.eventsConfig && Array.isArray(cloud.eventsConfig.timeline) && cloud.eventsConfig.timeline.length > 0) {
+          merged.eventsConfig = cloud.eventsConfig;
+        } else if (local.eventsConfig) {
+          merged.eventsConfig = local.eventsConfig;
+        }
+        return merged;
+      }
+
       let activeConfig = null;
       const localData = localStorage.getItem('siteContent');
       const isDraftPreview = sessionStorage.getItem('isAdminLoggedIn') === 'true' || window.location.search.includes('preview');
@@ -246,38 +259,21 @@
           console.error("Error reading localStorage content", e);
         }
       } else if (window.siteContent) {
-        const fresh = JSON.parse(JSON.stringify(window.siteContent));
-        if (typeof activeConfig !== 'undefined') activeConfig = fresh;
-        if (typeof content !== 'undefined') content = fresh;
+        activeConfig = JSON.parse(JSON.stringify(window.siteContent));
       }
+      activeConfig = safeMergeConfig(window.siteContent || {}, activeConfig);
 
-      // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
-      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
-                        (typeof content !== 'undefined' && content && content.formConfig?.scriptURL) ||
-                        "";
-      if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-        scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-      }
+      let scriptURL = (activeConfig?.formConfig?.scriptURL) || "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       if (scriptURL && !isDraftPreview) {
         fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
-          if (data && data.portalGridConfig) {
+          if (data) {
             console.log("Loaded fresh config dynamically from Google Cloud API");
-            if (typeof activeConfig !== 'undefined') {
-              activeConfig = data;
-              if (typeof applyConfig !== 'undefined') applyConfig();
-              if (typeof populateCategories !== 'undefined') populateCategories();
-            }
-            if (typeof content !== 'undefined') {
-              content = data;
-            }
-            updateCommonElements(data);
-            
-            // Special page re-renders
-            if (typeof renderEvents !== 'undefined') renderEvents();
-            if (typeof renderExams !== 'undefined') renderExams();
-            if (typeof renderGalleryPhotos !== 'undefined') renderGalleryPhotos();
+            const merged = safeMergeConfig(window.siteContent || {}, data);
+            activeConfig = merged;
+            updateCommonElements(merged);
+            if (typeof window.renderEvents === 'function') window.renderEvents(merged);
           }
         })
         .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
@@ -285,178 +281,95 @@
 
       function updateCommonElements(data) {
         const logoUrl = data.logo || data.formConfig?.logoUrl || "IMG_3529.jpg";
-        const logoEl = document.getElementById("header-logo") || document.getElementById("siteLogo");
-        const navLogoEl = document.getElementById("nav-logo");
+        const logoEl = document.getElementById("header-logo");
         if (logoEl) logoEl.src = logoUrl;
-        if (navLogoEl) navLogoEl.src = logoUrl;
 
         const titleTaEl = document.getElementById("header-title-ta");
         const titleEnEl = document.getElementById("header-title-en");
-        const navBrandTitleEl = document.getElementById("nav-brand-title");
 
         const mainTitle = data.titleTa || data.formConfig?.title || "தமிழாலயம் பாட்சுவல்பாக்";
-        if (titleTaEl) {
-          titleTaEl.textContent = mainTitle;
-        }
+        if (titleTaEl) titleTaEl.textContent = mainTitle;
         if (titleEnEl) titleEnEl.textContent = data.titleEn || data.formConfig?.subtitle || "Thamilalayam Bad Schwalbach";
-        if (navBrandTitleEl) navBrandTitleEl.textContent = mainTitle.split(" ")[0] || "தமிழாலயம்";
 
-        // Apply colors dynamically
         const root = document.documentElement;
         const colors = data.colors || data.formConfig?.colors || {};
         if (colors.bodyBgStart) root.style.setProperty('--body-bg-start', colors.bodyBgStart);
         if (colors.bodyBgEnd) root.style.setProperty('--body-bg-end', colors.bodyBgEnd);
-        if (colors.headerBgStart) root.style.setProperty('--header-bg-start', colors.headerBgStart);
-        if (colors.headerBgEnd) root.style.setProperty('--header-bg-end', colors.headerBgEnd);
         if (colors.accentColor) root.style.setProperty('--accent-color', colors.accentColor);
         if (colors.containerBg) root.style.setProperty('--container-bg', colors.containerBg);
 
-        // Apply dynamic motto text
         const mottoText = data.formConfig?.marqueeText || "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ் மொழி எங்கள் உயிராகும்!";
         const marqueeSpans = document.querySelectorAll('.marquee-text');
-        if (marqueeSpans.length > 0) {
-          const formatted = escapeHtml(mottoText)
-            .replace(/\\n/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/,\s*/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/&amp;nbsp;/g, '&nbsp;');
-          marqueeSpans.forEach(span => {
-            span.innerHTML = formatted;
-          });
-        }
+        marqueeSpans.forEach(span => {
+          span.innerHTML = escapeHtml(mottoText).replace(/\\n/g, ' ✦ ').replace(/,\s*/g, ' ✦ ');
+        });
+      }
+
+      if (!activeConfig && window.siteContent) {
+        activeConfig = window.siteContent;
       }
 
       if (activeConfig) {
-        const mainTitle = activeConfig.formConfig?.title || activeConfig.titleTa || "தமிழாலயம் பாட்சுவல்பாக்";
-        const titleTaEl = document.getElementById('header-title-ta');
-        const titleEnEl = document.getElementById('header-title-en');
-        const logoEl = document.getElementById('header-logo');
-
-        if (titleTaEl) {
-          titleTaEl.textContent = mainTitle;
-        }
-        if (titleEnEl) titleEnEl.textContent = activeConfig.formConfig?.subtitle || activeConfig.titleEn || "Thamilalayam Bad Schwalbach";
-        
-        const logoUrl = activeConfig.formConfig?.logoUrl || activeConfig.logo || "IMG_3529.jpg";
-        if (logoEl) logoEl.src = logoUrl;
-
-        
-        // Apply dynamic motto text
-        const mottoText = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.marqueeText) || 
-                          (typeof content !== 'undefined' && content && content.formConfig?.marqueeText) || 
-                          "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ் மொழி எங்கள் உயிராகும்!";
-        const marqueeSpans = document.querySelectorAll('.marquee-text');
-        if (marqueeSpans.length > 0) {
-          const formatted = escapeHtml(mottoText)
-            .replace(/\\n/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/,\s*/g, ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ')
-            .replace(/&amp;nbsp;/g, '&nbsp;');
-          marqueeSpans.forEach(span => {
-            span.innerHTML = formatted;
-          });
-        }
-        
-        
-
-        // Apply contact coordinates dynamically in header
-        const globalContact = activeConfig.contactConfig || (typeof content !== 'undefined' ? content.contactConfig : null);
+        updateCommonElements(activeConfig);
+        const globalContact = activeConfig.contactConfig;
         if (globalContact) {
           const headerWaLink = document.getElementById('header-whatsapp-link');
           const headerEmailLink = document.getElementById('header-email-link');
           const headerFbLink = document.getElementById('header-facebook-link');
-          
-          if (globalContact.whatsapp && headerWaLink) {
-            const rawWa = globalContact.whatsapp.replace(/\+/g, '').replace(/\s+/g, '');
-            headerWaLink.href = 'https://wa.me/' + rawWa;
-          }
-          if (globalContact.email && headerEmailLink) {
-            headerEmailLink.href = 'mailto:' + globalContact.email;
-          }
-          if (globalContact.facebook && headerFbLink) {
-            let fb = globalContact.facebook.trim();
-            if (!fb.startsWith('http')) {
-              fb = 'https://www.facebook.com/' + fb;
-            }
-            headerFbLink.href = fb;
-          }
+          if (globalContact.whatsapp && headerWaLink) headerWaLink.href = 'https://wa.me/' + globalContact.whatsapp.replace(/\+/g, '').replace(/\s+/g, '');
+          if (globalContact.email && headerEmailLink) headerEmailLink.href = 'mailto:' + globalContact.email;
+          if (globalContact.facebook && headerFbLink) headerFbLink.href = globalContact.facebook.startsWith('http') ? globalContact.facebook : 'https://www.facebook.com/' + globalContact.facebook;
         }
-        
-        // Dynamically update footer name
-        const footerTextP = document.querySelector('footer p');
-        if (footerTextP) {
-          const dynamicTitle = (activeConfig && (activeConfig.titleTa || activeConfig.formConfig?.title)) || 
-                               (typeof content !== 'undefined' && (content.titleTa || content.formConfig?.title)) || 
-                               'தமிழாலயம் பாட்சுவல்பாக்';
-          footerTextP.innerHTML = footerTextP.innerHTML.replace('தமிழாலயம் பாட்சுவல்பாக்', dynamicTitle);
-        }
-
-        // Apply theme colors
-        const colors = activeConfig.formConfig?.colors;
-        if (colors) {
-          const root = document.documentElement;
-          if (colors.bodyBgStart) root.style.setProperty('--bg-start', colors.bodyBgStart);
-          if (colors.bodyBgEnd) root.style.setProperty('--bg-end', colors.bodyBgEnd);
-          if (colors.accentColor) {
-            root.style.setProperty('--primary', colors.accentColor);
-            root.style.setProperty('--primary-hover', colors.accentColor + 'dd');
-          }
-          if (colors.containerBg) root.style.setProperty('--card-bg', colors.containerBg);
-        }
-
-        // Render dynamic events timeline
-        const eventsContainer = document.getElementById('events-container');
-        const timelineContainer = document.getElementById('events-timeline');
-        if (eventsContainer && timelineContainer && activeConfig.eventsConfig) {
-          const eventsData = activeConfig.eventsConfig;
-          
-          const titleEl = eventsContainer.querySelector('.title-h1');
-          if (titleEl) titleEl.textContent = eventsData.title || 'தமிழாலய நிகழ்வுகள்';
-          
-          let html = '';
-          if (eventsData.timeline && eventsData.timeline.length > 0) {
-            eventsData.timeline.forEach((event, idx) => {
-              const themeVariants = [
-                { color: '#c81d4f', bg: '#fdf2f4', icon: '🎓' },
-                { color: '#ff7a3d', bg: '#fff5f0', icon: '🌟' },
-                { color: '#b45309', bg: '#fffbeb', icon: '🪔' },
-                { color: '#6b4fd6', bg: '#f5f3ff', icon: '🎄' },
-                { color: '#2fb8a6', bg: '#ecfeff', icon: '🌾' }
-              ];
-              const theme = themeVariants[idx % themeVariants.length];
-              const badgeText = event.badge || '🌟 நிகழ்வு';
-              
-              html += `
-                <div class="event-card-item" style="background: #ffffff; border-radius: 20px; border: 1px solid var(--border-soft); border-left: 6px solid ${theme.color}; box-shadow: 0 6px 18px rgba(0,0,0,0.04); padding: 20px 24px; display: flex; align-items: center; gap: 18px; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 18px; text-align: left;">
-                  <div style="width: 56px; height: 56px; border-radius: 16px; background: ${theme.bg}; color: ${theme.color}; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; border: 1.5px solid ${theme.color}25; box-shadow: 0 4px 12px ${theme.color}15;">
-                    ${theme.icon}
-                  </div>
-                  
-                  <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 2px;">
-                      <span style="display: inline-flex; align-items: center; gap: 5px; background: ${theme.bg}; color: ${theme.color}; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; border: 1px solid ${theme.color}30;">
-                        📅 ${escapeHtml(event.date)}
-                      </span>
-                      <span style="background: ${theme.color}; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 12px; border-radius: 999px; box-shadow: 0 3px 8px ${theme.color}35;">
-                        ${escapeHtml(badgeText)}
-                      </span>
-                    </div>
-                    
-                    <h3 style="font-family: var(--font-heading); font-size: 18.5px; font-weight: 800; color: var(--text-heading); margin: 0;">
-                      ${escapeHtml(event.title)}
-                    </h3>
-                    <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin: 0;">
-                      ${escapeHtml(event.description)}
-                    </p>
-                  </div>
-                </div>
-              `;
-            });
-          } else {
-            html = '<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">நிகழ்வுகள் எதுவும் இல்லை.</div>';
-          }
-          timelineContainer.innerHTML = html;
-        }
+        if (typeof window.renderEvents === 'function') window.renderEvents(activeConfig);
       }
     });
+
+    window.renderEvents = function(configData) {
+      const cfg = configData || activeConfig || window.siteContent || {};
+      const timelineContainer = document.getElementById('events-timeline');
+      if (!timelineContainer) return;
+      const eventsData = cfg.eventsConfig || (window.siteContent && window.siteContent.eventsConfig) || { title: 'தமிழாலய நிகழ்வுகள்', timeline: [] };
+      let html = '';
+      if (eventsData.timeline && eventsData.timeline.length > 0) {
+        eventsData.timeline.forEach((event, idx) => {
+          const themeVariants = [
+            { color: '#c81d4f', bg: '#fdf2f4', icon: '🎓' },
+            { color: '#ff7a3d', bg: '#fff5f0', icon: '🌟' },
+            { color: '#b45309', bg: '#fffbeb', icon: '🪔' },
+            { color: '#6b4fd6', bg: '#f5f3ff', icon: '🎄' },
+            { color: '#2fb8a6', bg: '#ecfeff', icon: '🌾' }
+          ];
+          const theme = themeVariants[idx % themeVariants.length];
+          const badgeText = event.badge || '🌟 நிகழ்வு';
+          html += `
+            <div class="event-card-item" style="background: #ffffff; border-radius: 20px; border: 1px solid var(--border-soft); border-left: 6px solid ${theme.color}; box-shadow: 0 6px 18px rgba(0,0,0,0.04); padding: 20px 24px; display: flex; align-items: center; gap: 18px; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 18px; text-align: left;">
+              <div style="width: 56px; height: 56px; border-radius: 16px; background: ${theme.bg}; color: ${theme.color}; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; border: 1.5px solid ${theme.color}25; box-shadow: 0 4px 12px ${theme.color}15;">
+                ${theme.icon}
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 2px;">
+                  <span style="display: inline-flex; align-items: center; gap: 5px; background: ${theme.bg}; color: ${theme.color}; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; border: 1px solid ${theme.color}30;">
+                    📅 ${escapeHtml(event.date || '')}
+                  </span>
+                  <span style="background: ${theme.color}; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 12px; border-radius: 999px; box-shadow: 0 3px 8px ${theme.color}35;">
+                    ${escapeHtml(badgeText)}
+                  </span>
+                </div>
+                <h3 style="font-family: var(--font-heading); font-size: 18.5px; font-weight: 800; color: var(--text-heading); margin: 0;">
+                  ${escapeHtml(event.title || '')}
+                </h3>
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin: 0;">
+                  ${escapeHtml(event.description || '')}
+                </p>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        html = '<div style="text-align:center; color:var(--text-muted); padding:20px; font-style:italic;">நிகழ்வுகள் எதுவும் இல்லை.</div>';
+      }
+      timelineContainer.innerHTML = html;
+    };
   
     // Admin hidden navigation shortcut helper
     function initAdminShortcut() {
