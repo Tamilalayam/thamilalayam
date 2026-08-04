@@ -213,17 +213,12 @@
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
       function safeMergeConfig(local, cloud) {
-        if (!cloud) return local || {};
-        if (!local) return cloud;
+        if (!cloud || Object.keys(cloud).length === 0) return local || {};
         const merged = Object.assign({}, local, cloud);
-        const cloudHasPhotos = cloud.galleryConfig && (
-          (Array.isArray(cloud.galleryConfig.albums) && cloud.galleryConfig.albums.length > 0) ||
-          (Array.isArray(cloud.galleryConfig.photos) && cloud.galleryConfig.photos.length > 0)
-        );
-        if (cloudHasPhotos) {
+
+        // Cloud galleryConfig takes 100% priority
+        if (cloud.galleryConfig && (Array.isArray(cloud.galleryConfig.albums) || Array.isArray(cloud.galleryConfig.photos))) {
           merged.galleryConfig = cloud.galleryConfig;
-        } else if (local.galleryConfig) {
-          merged.galleryConfig = local.galleryConfig;
         }
         return merged;
       }

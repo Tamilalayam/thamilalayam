@@ -471,11 +471,11 @@ window.siteContent = {
       },
       {
         "username": "Nila",
-        "password": "1234",
+        "password": "10052017",
         "fullName": "நிலா சுதாகர்",
         "fullNameEn": "Nila Sudhakar",
         "studentClass": "03",
-        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"திறன்\",\"listening\":\"திறன்\",\"reading\":\"திறன்\",\"writing\":\"திறன்\"}",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
         "tamilResults": "விபரங்கள் எதுவும் பதிவிடப்படவில்லை.",
         "otherDetails": "விபரங்கள் எதுவும் பதிவிடப்படவில்லை."
       },

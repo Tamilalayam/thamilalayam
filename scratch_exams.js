@@ -1,152 +1,4 @@
-<!DOCTYPE html>
-<html lang="ta">
-<head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <!-- Website Favicon / Icon for Google Search & Browser Tabs -->
-  <link rel="icon" href="IMG_3529.jpg" type="image/jpeg" />
-  <link rel="shortcut icon" href="IMG_3529.jpg" type="image/jpeg" />
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>தேர்வுகள் | தமிழாலயம் பாட்சுவல்பாக்</title>
-  
-  <!-- Import Outfit and Inter fonts for premium typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Baloo+Thambi+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <link rel="stylesheet" href="baukasten.css?v=3">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Marutham&display=swap" rel="stylesheet">
-
-
-
-</head>
-
-<body>
-  
-  <!-- Floating Audio Player -->
-  <audio id="bg-music" loop autoplay src="music.mp3"></audio>
-  <button id="music-toggle-btn" class="music-btn" onclick="toggleMusic()" title="இசையை இயக்கு/நிறுத்து">
-    <span class="music-icon">🎵</span>
-  </button>
-
-  <!-- Top Utility Bar -->
-      <div class="top-bar">
-    <div class="top-bar-content" style="justify-content: center;">
-      <div class="marquee-container" style="margin-right: 0; width: 100%; overflow: hidden; ">
-        <div class="marquee-track">
-          <span class="marquee-text">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
-          <span class="marquee-text" style="padding-left: 150px;">கல்வியும் கலையும் நம்மிரு கண்கள் * நல் தமிழ்மொழி எங்கள் உயிராகும்</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-        <!-- Main Brand Header -->
-  <header class="brand-header">
-    <div class="brand-header-content">
-      <a href="index.html?v=1.1" class="brand-logo-container">
-        <img id="header-logo" src="IMG_3529.jpg" alt="Logo" class="main-logo">
-        <div class="brand-text">
-          <h1 id="header-title-ta">தமிழாலயம் பாட்சுவல்பாக்</h1>
-          <p id="header-title-en">Thamilalayam Bad Schwalbach</p>
-          <p class="brand-motto-sub">கல்வி, கலை, விளையாட்டு</p>
-        </div>
-      </a>
-      
-      <!-- Right Side Contact Icons Widget -->
-      <div class="header-contact-right">
-        <!-- WhatsApp -->
-        <a href="https://wa.me/491783272302" id="header-whatsapp-link" class="header-contact-item notranslate" translate="no" target="_blank" title="WhatsApp">
-          <span class="contact-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="#25D366" style="display:block;">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.739-1.453L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.863-9.858.002-2.634-1.026-5.112-2.895-6.983-1.87-1.871-4.348-2.895-6.98-2.896-5.437 0-9.86 4.417-9.863 9.858-.001 1.702.451 3.361 1.309 4.815L1.874 21.8l4.773-1.252h.001zm13.125-9.143c-.279-.14-.1.65-.285-.88-.066-.111-.253-.18-.53-.32-.277-.14-1.64-.809-1.895-.901-.255-.093-.44-.139-.626.14-.184.279-.715.901-.876 1.087-.16.186-.32.21-.6.07-.28-.14-1.182-.436-2.25-1.39-.831-.74-1.391-1.656-1.554-1.936-.163-.28-.017-.431.122-.571.125-.125.277-.32.415-.48.139-.16.186-.277.279-.465.093-.186.046-.35-.023-.49-.069-.14-.626-1.506-.856-2.062-.225-.548-.475-.473-.626-.48-.15-.008-.323-.01-.493-.01-.17 0-.447.064-.68.32-.233.256-.889.87-.889 2.122 0 1.25.909 2.457 1.034 2.624.125.167 1.79 2.733 4.336 3.832.606.262 1.08.419 1.448.536.61.194 1.165.166 1.604.1.488-.074 1.641-.671 1.871-1.319.23-.648.23-1.204.162-1.319-.069-.115-.254-.186-.533-.327z"/>
-            </svg>
-          </span>
-          <span class="contact-value" id="header-whatsapp-val">thamilalayam</span>
-        </a>
-        
-        <!-- Email -->
-        <a href="mailto:kontakt@thamilalayam.net" id="header-email-link" class="header-contact-item notranslate" translate="no" title="Email">
-          <span class="contact-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="#EA4335" style="display:block;">
-              <path d="M0 3v18h24v-18h-24zm21.518 2L12 12.75 2.482 5h19.036zm-19.518 14v-11.75l10 8.125 10-8.125v11.75h-20z"/>
-            </svg>
-          </span>
-          <span class="contact-value" id="header-email-text">thamilalayam@gmail.com</span>
-        </a>
-
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/Thamilalayam/" id="header-facebook-link" class="header-contact-item notranslate" translate="no" target="_blank" title="Facebook">
-          <span class="contact-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2" style="display:block;">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </span>
-          <span class="contact-value">thamilalayam</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-        <!-- Sticky Navigation Menu Bar -->
-  <nav class="main-navbar">
-    <div class="nav-container">
-      <!-- Mobile Menu Toggle Button (Hamburger) -->
-      <button class="mobile-menu-toggle" aria-label="Toggle Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      
-      <!-- Mobile App-like Centered Brand Title -->
-      
-      
-      <!-- Mobile Quick Student Login Icon Button -->
-      <a href="login.html?v=1.1" class="mobile-quick-login" title="மாணவர் உள்நுழைவு">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="display:block;">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-        </svg>
-      </a>
-
-      <div class="nav-links">
-        <a href="index.html?v=1.1" class="nav-link " id="nav-home">முகப்பு</a>
-        <a href="events.html?v=1.1" class="nav-link " id="nav-events">நிகழ்வுகள்</a>
-        <a href="exams.html?v=1.1" class="nav-link active" id="nav-exams">தேர்வுகள்</a>
-        <a href="index.html#quick-links" class="nav-link" id="nav-links">இணைப்புகள்</a>
-        <a href="gallery.html?v=1.1" class="nav-link " id="nav-gallery">படங்கள்</a>
-        <a href="contact.html?v=1.1" class="nav-link " id="nav-contact">தொடர்புகளுக்கு</a>
-        <a href="login.html?v=1.1" class="nav-link " id="nav-login">Login</a>
-        <a href="admin.html" class="nav-link" id="nav-admin" style="display:none;">நிர்வாகம்</a>
-      </div>
-      <div class="mobile-nav-title">தமிழாலயம் பாட்சுவல்பாக்</div>
-    </div>
-  </nav>
-
-  <!-- Main Container -->
-  <div class="container" id="exams-container">
-    <h2 class="title-h1">தமிழாலயத் தேர்வுகள் (Exams Portal)</h2>
-    
-
-    <div class="exam-section">
-      <h3>தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறியும் வழிமுறை:</h3>
-      <p>மாணவர்கள் மற்றும் பெற்றோர்கள் தங்களுக்கு வழங்கப்பட்ட பயனர் பெயர் (Username) மற்றும் கடவுச்சொல் (Password) மூலம் <strong>'உள்நுழைவு' (Login)</strong> பக்கத்திற்குச் சென்று தங்களுடைய தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறிந்து கொள்ளலாம்.</p>
-    </div>
-  </div>
-
-  <footer>
-    <p>© 2026 தமிழாலயம் பாட்சுவல்பாக். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.</p>
-  </footer>
-
-  <!-- Include sports-config.js database -->
-  <script src="sports-config.js?v=1785521173"></script>
-  <script>
     // Initialize Mobile Hamburger Menu
     function initMobileMenu() {
       const toggleBtn = document.querySelector('.mobile-menu-toggle');
@@ -194,8 +46,8 @@
         btn.querySelector('.music-icon').textContent = '🎵';
       }
     }
-  </script>
-  <script>
+  
+
     function escapeHtml(string) {
       return String(string)
         .replace(/&/g, '&amp;')
@@ -261,12 +113,13 @@
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
       function safeMergeConfig(local, cloud) {
-        if (!cloud || Object.keys(cloud).length === 0) return local || {};
+        if (!cloud) return local || {};
+        if (!local) return cloud;
         const merged = Object.assign({}, local, cloud);
-
-        // Cloud examsConfig takes 100% priority
-        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections)) {
+        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections) && cloud.examsConfig.sections.length > 0) {
           merged.examsConfig = cloud.examsConfig;
+        } else if (local.examsConfig) {
+          merged.examsConfig = local.examsConfig;
         }
         return merged;
       }
@@ -528,8 +381,4 @@
         btn.querySelector('.music-icon').textContent = '🎵';
       }
     }
-  </script>
-
-<script src="baukasten.js"></script>
-</body>
-</html>
+  

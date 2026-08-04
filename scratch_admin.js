@@ -2005,6 +2005,17 @@
 
         localStorage.setItem('siteContent', JSON.stringify(currentContent));
         
+        // Auto-sync to Google Cloud Script
+        const scriptURL = currentContent.formConfig?.scriptURL || "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
+        if (scriptURL) {
+          fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveConfig', data: currentContent })
+          }).catch(err => console.log("Cloud auto-sync note:", err));
+        }
+
         // Toast notice
         const toast = document.getElementById('toast');
         toast.className = 'show';

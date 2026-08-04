@@ -246,8 +246,22 @@
         .then(res => res.json())
         .then(data => {
           if (data) {
-            console.log("Loaded fresh config dynamically from Google Cloud API");
+            // Cloud data takes 100% master priority over sports-config.js
             content = Object.assign({}, window.siteContent || {}, data);
+            if (data.items) content.items = data.items;
+            if (data.vaultConfig && Array.isArray(data.vaultConfig.users)) {
+              if (!content.vaultConfig) content.vaultConfig = {};
+              content.vaultConfig.users = data.vaultConfig.users;
+            }
+            if (data.examsConfig && Array.isArray(data.examsConfig.sections)) {
+              content.examsConfig = data.examsConfig;
+            }
+            if (data.eventsConfig && Array.isArray(data.eventsConfig.timeline)) {
+              content.eventsConfig = data.eventsConfig;
+            }
+            if (data.galleryConfig) {
+              content.galleryConfig = data.galleryConfig;
+            }
             updatePageElements(content);
           }
         })

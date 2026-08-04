@@ -847,24 +847,46 @@
         scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
       }
       function safeMergeConfig(local, cloud) {
-        if (!cloud) return local || {};
-        if (!local) return cloud;
+        if (!cloud || Object.keys(cloud).length === 0) return local || {};
         const merged = Object.assign({}, local, cloud);
-        merged.vaultConfig = Object.assign({}, local.vaultConfig || {}, cloud.vaultConfig || {});
 
-        const cloudUsers = (cloud.vaultConfig && Array.isArray(cloud.vaultConfig.users) && cloud.vaultConfig.users.length > 0)
-          ? cloud.vaultConfig.users
-          : (Array.isArray(cloud.users) && cloud.users.length > 0 ? cloud.users : null);
+        // Users list merging: Cloud users + Local updated user passwords/details preserved!
+        const cloudUsers = (cloud.vaultConfig && Array.isArray(cloud.vaultConfig.users)) ? cloud.vaultConfig.users : (Array.isArray(cloud.users) ? cloud.users : []);
+        const localUsers = (local.vaultConfig && Array.isArray(local.vaultConfig.users)) ? local.vaultConfig.users : [];
 
-        const localUsers = (local.vaultConfig && Array.isArray(local.vaultConfig.users) && local.vaultConfig.users.length > 0)
-          ? local.vaultConfig.users
-          : (Array.isArray(local.users) ? local.users : []);
-
-        if (cloudUsers) {
+        if (localUsers.length > 0 && cloudUsers.length > 0) {
+          const mergedUsers = cloudUsers.map(cU => {
+            const lMatch = localUsers.find(lU => 
+              (lU.username && cU.username && lU.username.toLowerCase().trim() === cU.username.toLowerCase().trim()) ||
+              (lU.fullName && cU.fullName && lU.fullName.toLowerCase().trim() === cU.fullName.toLowerCase().trim())
+            );
+            return lMatch ? Object.assign({}, cU, lMatch) : cU;
+          });
+          if (!merged.vaultConfig) merged.vaultConfig = {};
+          merged.vaultConfig.users = mergedUsers;
+        } else if (cloudUsers.length > 0) {
+          if (!merged.vaultConfig) merged.vaultConfig = {};
           merged.vaultConfig.users = cloudUsers;
-        } else {
+        } else if (localUsers.length > 0) {
+          if (!merged.vaultConfig) merged.vaultConfig = {};
           merged.vaultConfig.users = localUsers;
         }
+
+        // Cloud examsConfig takes 100% priority
+        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections)) {
+          merged.examsConfig = cloud.examsConfig;
+        }
+
+        // Cloud eventsConfig takes 100% priority
+        if (cloud.eventsConfig && Array.isArray(cloud.eventsConfig.timeline)) {
+          merged.eventsConfig = cloud.eventsConfig;
+        }
+
+        // Cloud galleryConfig takes 100% priority
+        if (cloud.galleryConfig && Array.isArray(cloud.galleryConfig.photos)) {
+          merged.galleryConfig = cloud.galleryConfig;
+        }
+
         return merged;
       }
 
@@ -1224,7 +1246,9 @@
           const uName = (u.username || "").toLowerCase().trim();
           const fName = (u.fullName || "").toLowerCase().trim();
           const fNameEn = (u.fullNameEn || "").toLowerCase().trim();
-          return uName === inputClean || fName === inputClean || fNameEn === inputClean;
+          const firstNameTa = fName.split(' ')[0].trim();
+          const firstNameEn = uName.split(' ')[0].trim();
+          return uName === inputClean || fName === inputClean || fNameEn === inputClean || firstNameTa === inputClean || firstNameEn === inputClean;
         });
 
         // 1. Strict Student Name Verification
@@ -1269,9 +1293,9 @@
             return;
           }
 
-          // Check Password for regular student login
+          // Check Password for regular student login - strictly enforce the student's set password!
           const expectedPassword = (usernameMatch.password || "1234").toString().trim();
-          if (passwordInput !== expectedPassword && passwordInput !== "1234" && passwordInput !== "student2026") {
+          if (passwordInput !== expectedPassword) {
             failedPasswordAttempts++;
             const remaining = 3 - failedPasswordAttempts;
 
@@ -1446,7 +1470,9 @@
         const uName = (u.username || "").toString().trim().toLowerCase();
         const fName = (u.fullName || "").toString().trim().toLowerCase();
         const fNameEn = (u.fullNameEn || "").toString().trim().toLowerCase();
-        return uName === inputClean || fName === inputClean || fNameEn === inputClean;
+        const firstNameTa = fName.split(' ')[0].trim();
+        const firstNameEn = uName.split(' ')[0].trim();
+        return uName === inputClean || fName === inputClean || fNameEn === inputClean || firstNameTa === inputClean || firstNameEn === inputClean;
       });
       const profileContainer = document.getElementById('profile-data-container');
       

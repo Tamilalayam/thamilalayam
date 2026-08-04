@@ -235,13 +235,12 @@
         });
       }
       function safeMergeConfig(local, cloud) {
-        if (!cloud) return local || {};
-        if (!local) return cloud;
+        if (!cloud || Object.keys(cloud).length === 0) return local || {};
         const merged = Object.assign({}, local, cloud);
-        if (cloud.eventsConfig && Array.isArray(cloud.eventsConfig.timeline) && cloud.eventsConfig.timeline.length > 0) {
+
+        // Cloud eventsConfig takes 100% priority
+        if (cloud.eventsConfig && Array.isArray(cloud.eventsConfig.timeline)) {
           merged.eventsConfig = cloud.eventsConfig;
-        } else if (local.eventsConfig) {
-          merged.eventsConfig = local.eventsConfig;
         }
         return merged;
       }
