@@ -283,36 +283,8 @@
         if (typeof content !== 'undefined') content = fresh;
       }
 
-      // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
-      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
-                        (typeof content !== 'undefined' && content && content.formConfig?.scriptURL) ||
-                        "";
-      if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-        scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-      }
-      if (scriptURL && !isDraftPreview) {
-        fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.portalGridConfig) {
-            console.log("Loaded fresh config dynamically from Google Cloud API");
-            if (typeof activeConfig !== 'undefined') {
-              activeConfig = data;
-              if (typeof applyConfig !== 'undefined') applyConfig();
-              if (typeof populateCategories !== 'undefined') populateCategories();
-            }
-            if (typeof content !== 'undefined') {
-              content = data;
-            }
-            updateCommonElements(data);
-            
-            // Special page re-renders
-            if (typeof renderEvents !== 'undefined') renderEvents();
-            if (typeof renderExams !== 'undefined') renderExams();
-            if (typeof renderGalleryPhotos !== 'undefined') renderGalleryPhotos();
-          }
-        })
-        .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
+      if (activeConfig) {
+        updateCommonElements(activeConfig);
       }
 
       function updateCommonElements(data) {

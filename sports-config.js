@@ -341,7 +341,7 @@ window.siteContent = {
       },
       {
         "username": "Vittal",
-        "password": "1234",
+        "password": "2029",
         "fullName": "விட்டல் ராமன்",
         "fullNameEn": "Vittal Raman",
         "studentClass": "3",
@@ -351,7 +351,7 @@ window.siteContent = {
       },
       {
         "username": "Anchai",
-        "password": "1234",
+        "password": "2051",
         "fullName": "அஞ்சை கணேசமூர்த்தி",
         "fullNameEn": "Anchai Kanesamoorthy",
         "studentClass": "01",
@@ -361,7 +361,7 @@ window.siteContent = {
       },
       {
         "username": "Poomika",
-        "password": "1234",
+        "password": "2093",
         "fullName": "பூமிகா ஆதிரை",
         "fullNameEn": "Poomika Athirai",
         "studentClass": "01",
@@ -371,8 +371,8 @@ window.siteContent = {
       },
       {
         "username": "Kruthvika",
-        "password": "1234",
-        "fullName": "கிருத்திவிகா பாரதிதாசன்",
+        "password": "2001",
+        "fullName": "கிருத்விகா பாரதிதாசன்",
         "fullNameEn": "Kruthvika Barathi Dhasan",
         "studentClass": "03",
         "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"\"}",
@@ -381,7 +381,7 @@ window.siteContent = {
       },
       {
         "username": "Kruththin",
-        "password": "1234",
+        "password": "2002",
         "fullName": "கிருத்தின்  பாரதிதாசன்",
         "fullNameEn": "Kruththin Barathi Dhasan",
         "studentClass": "08",
@@ -391,7 +391,7 @@ window.siteContent = {
       },
       {
         "username": "Yuvan",
-        "password": "1234",
+        "password": "3696",
         "fullName": "யுவன் விஷ்வா பூபதிபாலவடிவேற்கரன்",
         "fullNameEn": "Yuvan Vishva Boopathibalavadivetkaran",
         "studentClass": "01",
@@ -400,9 +400,9 @@ window.siteContent = {
         "otherDetails": ""
       },
       {
-        "username": "Neyan",
-        "password": "1234",
-        "fullName": "நேயன் நல்லையா",
+        "username": "Neyagan",
+        "password": "2015",
+        "fullName": "நேயகன் நல்லையா",
         "fullNameEn": "Neyan Nallaiah",
         "studentClass": "06",
         "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
@@ -411,8 +411,8 @@ window.siteContent = {
       },
       {
         "username": "Prakriti",
-        "password": "1234",
-        "fullName": "பிரக்கிரிதி சிறிநாத்",
+        "password": "2010",
+        "fullName": "பிரக்ரிதி சிறிநாத்",
         "fullNameEn": "Prakriti Srinatha",
         "studentClass": "06",
         "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
@@ -421,7 +421,7 @@ window.siteContent = {
       },
       {
         "username": "Sanjai",
-        "password": "1234",
+        "password": "2056",
         "fullName": "சஞ்சய் பூலோகராசா",
         "fullNameEn": "Sanjai Poolagarasa",
         "studentClass": "03",
@@ -441,7 +441,7 @@ window.siteContent = {
       },
       {
         "username": "Aehan",
-        "password": "1234",
+        "password": "2088",
         "fullName": "ஏகன் அனேகன் பூபதிபாலவடிவேற்கரன்",
         "fullNameEn": "Aehan Anaehan Boopathybalavadivetkaran",
         "studentClass": "03",
@@ -451,8 +451,8 @@ window.siteContent = {
       },
       {
         "username": "Sahana",
-        "password": "1234",
-        "fullName": "சஹானா மணிகண்டன்",
+        "password": "2004",
+        "fullName": "சகானா மணிகண்டன்",
         "fullNameEn": "Sahana Manikandan",
         "studentClass": "02",
         "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
@@ -460,9 +460,9 @@ window.siteContent = {
         "otherDetails": ""
       },
       {
-        "username": "Presha",
-        "password": "1234",
-        "fullName": "பிரேஷா சிறீநாத்",
+        "username": "Preksha",
+        "password": "2016",
+        "fullName": "பிரேக்ஷா சிறீநாத்",
         "fullNameEn": "Presha Sreenath",
         "studentClass": "02",
         "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
@@ -471,17 +471,17 @@ window.siteContent = {
       },
       {
         "username": "Nila",
-        "password": "10052017",
+        "password": "2030",
         "fullName": "நிலா சுதாகர்",
         "fullNameEn": "Nila Sudhakar",
         "studentClass": "03",
-        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"\",\"listening\":\"\",\"reading\":\"\",\"writing\":\"\",\"skill\":\"\"}",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"-\",\"listening\":\"-\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"-\"}",
         "tamilResults": "விபரங்கள் எதுவும் பதிவிடப்படவில்லை.",
         "otherDetails": "விபரங்கள் எதுவும் பதிவிடப்படவில்லை."
       },
       {
         "username": "Yugan",
-        "password": "1234",
+        "password": "2073",
         "fullName": "யுகன் பத்மநாதபிரபு",
         "fullNameEn": "Yugan Padmanathaprabu",
         "studentClass": "09",
@@ -491,7 +491,7 @@ window.siteContent = {
       },
       {
         "username": "Aathanyan",
-        "password": "1234",
+        "password": "2038",
         "fullName": "ஆதன்யன் வேல்முருகு",
         "fullNameEn": "Aathanyan Velmuruku",
         "studentClass": "03",
@@ -501,7 +501,7 @@ window.siteContent = {
       },
       {
         "username": "Sathushan",
-        "password": "1234",
+        "password": "2078",
         "fullName": "சதுஷன் அரங்கேசன்",
         "fullNameEn": "Sathushan Arankesan",
         "studentClass": "08",
@@ -511,7 +511,7 @@ window.siteContent = {
       },
       {
         "username": "Mithushan",
-        "password": "1234",
+        "password": "2062",
         "fullName": "மிதுஷன் அரங்கேசன்",
         "fullNameEn": "Mithushan Arankesan",
         "studentClass": "10",
@@ -521,7 +521,7 @@ window.siteContent = {
       },
       {
         "username": "Kabisha",
-        "password": "1234",
+        "password": "2095",
         "fullName": "கபிஷா தேவகாஞ்சன்",
         "fullNameEn": "Kabisha Thevakanchan",
         "studentClass": "10",
@@ -531,7 +531,7 @@ window.siteContent = {
       },
       {
         "username": "Sarujan",
-        "password": "1234",
+        "password": "2056",
         "fullName": "சாருயன் சுதாகர்",
         "fullNameEn": "Sarujan Suthagar",
         "studentClass": "10",
@@ -541,7 +541,7 @@ window.siteContent = {
       },
       {
         "username": "Ameer",
-        "password": "1234",
+        "password": "2096",
         "fullName": "செய்யது ஹாதில் அமீர்",
         "fullNameEn": "Seyd Hadhil Ameer",
         "studentClass": "09",
@@ -551,17 +551,17 @@ window.siteContent = {
       },
       {
         "username": "Ayani",
-        "password": "1234",
+        "password": "2033",
         "fullName": "அயனி சுரஸ்வரன்",
         "fullNameEn": "Ayani Sureshwaran",
         "studentClass": "07",
-        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"உயர்தேர்ச்சி\",\"listening\":\"நிறைவு\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"உயர்தேர்ச்சி\"}",
+        "examResults": "{\"isStructured\":true,\"year\":\"2026\",\"speaking\":\"-\",\"listening\":\"-\",\"reading\":\"-\",\"writing\":\"-\",\"skill\":\"-\"}",
         "tamilResults": "",
         "otherDetails": ""
       },
       {
         "username": "Lattika",
-        "password": "1234",
+        "password": "2045",
         "fullName": "லத்திகா சோபி பூலோகராசா",
         "fullNameEn": "Lattika Sophie Poologarajah",
         "studentClass": "08",
@@ -571,7 +571,7 @@ window.siteContent = {
       },
       {
         "username": "Jeevan",
-        "password": "1234",
+        "password": "2032",
         "fullName": "ஜீவன் வெங்கடசெல்வம்",
         "fullNameEn": "Jeevan Vengadaselvam",
         "studentClass": "08",
@@ -581,7 +581,7 @@ window.siteContent = {
       },
       {
         "username": "Aradhana",
-        "password": "1234",
+        "password": "2064",
         "fullName": "ஆராதனா சரவணகுமார்",
         "fullNameEn": "Aradhana Saravanakumar",
         "studentClass": "06",
@@ -591,7 +591,7 @@ window.siteContent = {
       },
       {
         "username": "Kabinan",
-        "password": "1234",
+        "password": "1985",
         "fullName": "கபினன் தேவகாஞ்சன்",
         "fullNameEn": "Kabinan Thevakanchan",
         "studentClass": "06",
@@ -601,7 +601,7 @@ window.siteContent = {
       },
       {
         "username": "Sathurththika",
-        "password": "1234",
+        "password": "2058",
         "fullName": "சதுர்த்திகா சந்திரசேகரன்",
         "fullNameEn": "",
         "studentClass": "",

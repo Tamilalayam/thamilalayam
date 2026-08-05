@@ -748,7 +748,7 @@
             <h2 style="font-size: 23px; font-weight: 900; margin: 0; font-family: var(--font-heading); color:#ffffff;" id="user-display-name">மாணவர்</h2>
             <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap;" id="student-badges-container">
               <span style="background: rgba(255,255,255,0.18); font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 20px; color: #fff;" id="student-class-display">
-                🏫 வகுப்பு: 03
+                🏫 ஆண்டு: 03
               </span>
               <span style="background: rgba(52,211,153,0.18); color: #34d399; font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 20px;">
                 ● நிலை: செயலில் (Active)
@@ -826,88 +826,22 @@
     let activeConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
     function loadConfig() {
+      if (window.siteContent && Object.keys(window.siteContent).length > 0) {
+        activeConfig = JSON.parse(JSON.stringify(window.siteContent));
+      } else {
+        console.warn("sports-config.js was not found or failed to load. Using fallback configuration.");
+      }
       const localData = localStorage.getItem('siteContent');
-      const isDraftPreview = sessionStorage.getItem('isAdminLoggedIn') === 'true' || window.location.search.includes('preview');
-      if (localData && isDraftPreview) {
+      if (localData) {
         try {
           const parsed = JSON.parse(localData);
-          if (typeof activeConfig !== 'undefined') activeConfig = parsed;
-          if (typeof content !== 'undefined') content = parsed;
-        } catch (e) {
-          console.error("Error reading localStorage content", e);
-        }
-      } else if (window.siteContent) {
-        const fresh = JSON.parse(JSON.stringify(window.siteContent));
-        if (typeof activeConfig !== 'undefined') activeConfig = fresh;
-        if (typeof content !== 'undefined') content = fresh;
-      }
-
-      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) || "";
-      if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-        scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-      }
-      function safeMergeConfig(local, cloud) {
-        if (!cloud || Object.keys(cloud).length === 0) return local || {};
-        const merged = Object.assign({}, local, cloud);
-
-        // Users list merging: Cloud users + Local updated user passwords/details preserved!
-        const cloudUsers = (cloud.vaultConfig && Array.isArray(cloud.vaultConfig.users)) ? cloud.vaultConfig.users : (Array.isArray(cloud.users) ? cloud.users : []);
-        const localUsers = (local.vaultConfig && Array.isArray(local.vaultConfig.users)) ? local.vaultConfig.users : [];
-
-        if (localUsers.length > 0 && cloudUsers.length > 0) {
-          const mergedUsers = cloudUsers.map(cU => {
-            const lMatch = localUsers.find(lU => 
-              (lU.username && cU.username && lU.username.toLowerCase().trim() === cU.username.toLowerCase().trim()) ||
-              (lU.fullName && cU.fullName && lU.fullName.toLowerCase().trim() === cU.fullName.toLowerCase().trim())
-            );
-            return lMatch ? Object.assign({}, cU, lMatch) : cU;
-          });
-          if (!merged.vaultConfig) merged.vaultConfig = {};
-          merged.vaultConfig.users = mergedUsers;
-        } else if (cloudUsers.length > 0) {
-          if (!merged.vaultConfig) merged.vaultConfig = {};
-          merged.vaultConfig.users = cloudUsers;
-        } else if (localUsers.length > 0) {
-          if (!merged.vaultConfig) merged.vaultConfig = {};
-          merged.vaultConfig.users = localUsers;
-        }
-
-        // Cloud examsConfig takes 100% priority
-        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections)) {
-          merged.examsConfig = cloud.examsConfig;
-        }
-
-        // Cloud eventsConfig takes 100% priority
-        if (cloud.eventsConfig && Array.isArray(cloud.eventsConfig.timeline)) {
-          merged.eventsConfig = cloud.eventsConfig;
-        }
-
-        // Cloud galleryConfig takes 100% priority
-        if (cloud.galleryConfig && Array.isArray(cloud.galleryConfig.photos)) {
-          merged.galleryConfig = cloud.galleryConfig;
-        }
-
-        return merged;
-      }
-
-      if (scriptURL && !isDraftPreview) {
-        fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          if (data) {
-            const merged = safeMergeConfig(window.siteContent || {}, data);
-            if (typeof activeConfig !== 'undefined') {
-              activeConfig = merged;
-              if (typeof applyConfig !== 'undefined') applyConfig();
-            }
-            if (typeof content !== 'undefined') {
-              content = merged;
-            }
-            updateCommonElements(merged);
+          if (parsed && parsed.vaultConfig && Array.isArray(parsed.vaultConfig.users) && parsed.vaultConfig.users.length > 0) {
+            activeConfig = parsed;
           }
-        })
-        .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
+        } catch (e) {}
       }
+      applyConfig();
+      checkSessionStatus();
 
       function updateCommonElements(data) {
         const logoUrl = data.logo || data.formConfig?.logoUrl || "IMG_3529.jpg";
@@ -1348,29 +1282,41 @@
         if (!submitBtn) submitBtn = document.getElementById('gate-submit-btn');
 
         const textPath = document.getElementById('scanner-name-textpath');
-        if (textPath) {
-          textPath.textContent = `🛂  ${targetUsername.toUpperCase()}  •  தரவுகள் சரிபார்க்கப்படுகிறது...  •  `;
-        }
         const scanSvg = document.getElementById('airport-scan-svg');
         const laserLine = document.getElementById('laser-beam-line');
-        if (scanSvg) scanSvg.classList.add('active');
-        if (laserLine) laserLine.classList.add('active');
+        const studentFullName = (usernameMatch && usernameMatch.fullName) ? usernameMatch.fullName : targetUsername;
 
-        // STEP 1: Green Ring spins for 3 seconds FIRST
-        if (ring) {
-          ring.className = 'spinner-ring green-spin';
-        }
+        // STAGE 1 (0ms - 1600ms): Pure Circular Green Ring Spinning
+        if (ring) ring.className = 'spinner-ring green-spin';
+        if (laserLine) laserLine.classList.add('active');
+        if (scanSvg) scanSvg.classList.remove('active');
+
         if (doorStatusBottom) {
-          doorStatusBottom.innerHTML = `🟢 <strong>"${escapeHtml(targetUsername)}"</strong> - தரவுகள் சரிபார்க்கப்படுகிறது...`;
+          doorStatusBottom.innerHTML = `🟢 <strong>கணக்கு சரிபார்க்கப்படுகிறது...</strong>`;
           doorStatusBottom.style.background = 'rgba(16, 185, 129, 0.2)';
           doorStatusBottom.style.borderColor = '#10b981';
         }
         if (submitBtn) {
-          submitBtn.innerHTML = `<span class="green-circle-icon">⏳</span> <span>தரவுகள் சரிபார்க்கப்படுகிறது...</span>`;
+          submitBtn.innerHTML = `<span class="green-circle-icon">⏳</span> <span>சரிபார்க்கப்படுகிறது...</span>`;
           submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
         }
 
-        // STEP 2: After 3 seconds (3000ms) of green ring spinning, slide open the doors & show student portal!
+        // STAGE 2 (1600ms - 3600ms): Green Orbit Ring spins WITH Student's Full Name!
+        setTimeout(() => {
+          if (textPath) {
+            textPath.textContent = `✨  ${studentFullName.toUpperCase()}  •  நல்வரவு!  •  ${studentFullName.toUpperCase()}  •  `;
+          }
+          if (scanSvg) scanSvg.classList.add('active');
+
+          if (doorStatusBottom) {
+            doorStatusBottom.innerHTML = `✨ <strong>நல்வரவு, ${escapeHtml(studentFullName)}!</strong>`;
+          }
+          if (submitBtn) {
+            submitBtn.innerHTML = `<span class="green-circle-icon">🎓</span> <span>நல்வரவு, ${escapeHtml(studentFullName)}...</span>`;
+          }
+        }, 1600);
+
+        // STAGE 3 (3600ms): Slide open doors & reveal student portal!
         setTimeout(() => {
           if (scanSvg) scanSvg.classList.remove('active');
           if (laserLine) laserLine.classList.remove('active');
@@ -1487,7 +1433,7 @@
         if (nameEl) nameEl.textContent = fullName;
         
         const classEl = document.getElementById('student-class-display');
-        if (classEl) classEl.textContent = `🏫 வகுப்பு: ${studentClass}`;
+        if (classEl) classEl.textContent = `🏫 ஆண்டு: ${studentClass}`;
 
         let examHtml = "";
         let examData = null;
@@ -1604,13 +1550,22 @@
                 <div style="display: flex; align-items: center; gap: 10px;">
                   <span style="font-size: 26px;">🛡️</span>
                   <div>
-                    <h4 style="font-size: 17px; font-weight: 800; color: #38bdf8; margin: 0;">நிர்வாகி நேரலை திருத்தும் மையம் (Admin Student Record Editor)</h4>
-                    <span style="font-size: 13px; color: #94a3b8;">"${escapeHtml(fullName)}" மாணவரின் விபரங்கள், தேர்வு மதிப்பெண்கள் & PDF ஆவணத்தை இங்கேயே மாற்றிச் சேமிக்கலாம்.</span>
+                    <div>
+                      <h4 style="font-size: 17px; font-weight: 800; color: #38bdf8; margin: 0;">நிர்வாகி நேரலை திருத்தும் மையம் (Admin Student Record Editor)</h4>
+                      <span style="font-size: 13px; color: #94a3b8;">"${escapeHtml(fullName)}" மாணவரின் விபரங்கள், தேர்வு மதிப்பெண்கள் & PDF ஆவணத்தை இங்கேயே மாற்றிச் சேமிக்கலாம்.</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" onclick="exportUpdatedSportsConfig()" style="background: #2563eb; color: #ffffff; border: none; padding: 8px 16px; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer;">
+                      📥 sports-config.js கோப்பைப் பதிவிறக்கு
+                    </button>
+                    <button type="button" onclick="clearStorageQuota()" style="background: #ef4444; color: #ffffff; border: none; padding: 8px 16px; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer;">
+                      🧹 சுத்திகரி
+                    </button>
                   </div>
                 </div>
-              </div>
 
-              <div id="admin-inline-editor-form" style="display: flex; flex-direction: column; gap: 16px; background: rgba(255,255,255,0.04); padding: 18px; border-radius: 14px; border: 1px dashed rgba(255,255,255,0.2);">
+                <div id="admin-inline-editor-form" style="display: flex; flex-direction: column; gap: 16px; background: rgba(255,255,255,0.04); padding: 18px; border-radius: 14px; border: 1px dashed rgba(255,255,255,0.2);">
                 <!-- Row 1: Full Name, Class, Password -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
                   <div>
@@ -1618,7 +1573,7 @@
                     <input type="text" id="admin-edit-fullname" value="${escapeHtml(fullName)}" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #334155; background: #1e293b; color: #ffffff; font-weight: 700;">
                   </div>
                   <div>
-                    <label style="font-size: 13px; font-weight: 700; color: #38bdf8; display: block; margin-bottom: 5px;">🏫 வகுப்பு (Class)</label>
+                    <label style="font-size: 13px; font-weight: 700; color: #38bdf8; display: block; margin-bottom: 5px;">🏫 ஆண்டு (Year)</label>
                     <input type="text" id="admin-edit-class" value="${escapeHtml(studentClass)}" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #334155; background: #1e293b; color: #ffffff; font-weight: 700;">
                   </div>
                   <div>
@@ -1700,14 +1655,30 @@
       }
     }
 
+    function clearStorageQuota() {
+      try {
+        localStorage.clear();
+        alert("🧹 உங்களின் பிரவுசர் நினைவகம் வெற்றிகரமாகச் சுத்திகரிக்கப்பட்டது! இனி எந்தப் பிழையும் இன்றி சேமிக்கலாம்.");
+        location.reload();
+      } catch(e) {
+        alert("பிழை: " + e.message);
+      }
+    }
+
     function handleAdminStudentPdfUpload(input) {
       if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          alert("⚠️ PDF கோப்பின் அளவு அதிகமாக உள்ளது (Max: 2MB). தயவுசெய்து 2MB-க்கும் குறைவான PDF ஆவணத்தைப் பதிவேற்றவும்.");
+          input.value = "";
+          return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById('admin-edit-pdf-base64').value = e.target.result;
           alert("📁 PDF கோப்பு வெற்றிகரமாகப் பதிவேற்றப்பட்டது! சேமிக்க 'மாற்றங்களைச் சேமி' பொத்தானை அழுத்தவும்.");
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
       }
     }
 
@@ -1718,21 +1689,42 @@
       }
     }
 
+    function getAdminEditVal(id) {
+      const el = document.getElementById(id);
+      return el ? (el.value || "").trim() : "";
+    }
+
+    function exportUpdatedSportsConfig() {
+      try {
+        const jsonStr = JSON.stringify(window.siteContent || activeConfig, null, 2);
+        const code = `// Thamilalayam Bad Schwalbach - Dynamic Content Data\nwindow.siteContent = ${jsonStr};`;
+        const blob = new Blob([code], { type: 'application/javascript;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'sports-config.js';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch(e) {
+        console.error("Export error:", e);
+      }
+    }
+
     function saveAdminStudentEdit(originalUsername) {
       try {
-        const newFullName = document.getElementById('admin-edit-fullname').value.trim();
-        const newClass = document.getElementById('admin-edit-class').value.trim();
-        const newPassword = document.getElementById('admin-edit-password').value.trim();
+        const newFullName = getAdminEditVal('admin-edit-fullname');
+        const newClass = getAdminEditVal('admin-edit-class');
+        const newPassword = getAdminEditVal('admin-edit-password');
         
-        const speaking = document.getElementById('admin-edit-speaking').value.trim();
-        const listening = document.getElementById('admin-edit-listening').value.trim();
-        const reading = document.getElementById('admin-edit-reading').value.trim();
-        const writing = document.getElementById('admin-edit-writing').value.trim();
-        const skill = document.getElementById('admin-edit-skill').value.trim();
-        const pdfBase64 = document.getElementById('admin-edit-pdf-base64').value.trim();
+        const speaking = getAdminEditVal('admin-edit-speaking');
+        const listening = getAdminEditVal('admin-edit-listening');
+        const reading = getAdminEditVal('admin-edit-reading');
+        const writing = getAdminEditVal('admin-edit-writing');
+        const skill = getAdminEditVal('admin-edit-skill');
+        const pdfBase64 = getAdminEditVal('admin-edit-pdf-base64');
 
-        const newTamil = document.getElementById('admin-edit-tamilresults').value.trim();
-        const newOther = document.getElementById('admin-edit-otherdetails').value.trim();
+        const newTamil = getAdminEditVal('admin-edit-tamilresults');
+        const newOther = getAdminEditVal('admin-edit-otherdetails');
 
         let finalExamResults = "";
         if (pdfBase64) {
@@ -1759,7 +1751,10 @@
         let matchedUser = users.find(u => {
           const uName = (u.username || "").toString().trim().toLowerCase();
           const fName = (u.fullName || "").toString().trim().toLowerCase();
-          return uName === inputClean || fName === inputClean;
+          const fNameEn = (u.fullNameEn || "").toString().trim().toLowerCase();
+          const firstNameTa = fName.split(' ')[0].trim();
+          const firstNameEn = uName.split(' ')[0].trim();
+          return uName === inputClean || fName === inputClean || fNameEn === inputClean || firstNameTa === inputClean || firstNameEn === inputClean;
         });
 
         if (matchedUser) {
@@ -1778,19 +1773,11 @@
         window.siteContent.vaultConfig.users = users;
 
         localStorage.setItem('siteContent', JSON.stringify(window.siteContent));
+        
+        // Auto download updated sports-config.js file
+        exportUpdatedSportsConfig();
 
-        // Sync changes automatically to Google Cloud Script
-        const scriptURL = activeConfig.formConfig?.scriptURL || window.siteContent?.formConfig?.scriptURL;
-        if (scriptURL) {
-          fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'saveConfig', data: window.siteContent })
-          }).catch(err => console.log("Cloud sync note:", err));
-        }
-
-        alert("✅ மாணவர் விபரங்கள் மற்றும் தேர்வுப் பெறுபேறுகள் கணினியிலும் கூகுள் கிளவுடிலும் (Google Cloud) வெற்றிகரமாகச் சேமிக்கப்பட்டன!");
+        alert("✅ மாணவர் விபரங்கள் சேமிக்கப்பட்டு, புதிய 'sports-config.js' கோப்பு உங்களின் கணினியில் பதிவிறக்கம் செய்யப்பட்டுள்ளது!\n\nஇக்கோப்பை உங்களின் ஹோஸ்டிங்கில் (Host) பதிவேற்றம் (Upload) செய்யவும்.");
         renderUserProfile(newFullName || originalUsername);
       } catch(e) {
         console.error("Admin save error:", e);

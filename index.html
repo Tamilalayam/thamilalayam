@@ -212,61 +212,28 @@
       let content = JSON.parse(JSON.stringify(window.siteContent || {}));
 
       // Check localStorage for draft configurations
-      const localData = localStorage.getItem('siteContent');
-      const isDraftPreview = sessionStorage.getItem('isAdminLoggedIn') === 'true' || window.location.search.includes('preview');
-      if (localData && isDraftPreview) {
-        try {
-          const parsed = JSON.parse(localData);
-          if (typeof activeConfig !== 'undefined') activeConfig = parsed;
-          if (typeof content !== 'undefined') content = parsed;
-          console.log("Loaded local preview draft");
-        } catch (e) {
-          console.error("Error reading localStorage content", e);
-        }
-      } else if (window.siteContent) {
+      if (window.siteContent) {
         const fresh = JSON.parse(JSON.stringify(window.siteContent));
         if (typeof activeConfig !== 'undefined') activeConfig = fresh;
         if (typeof content !== 'undefined') content = fresh;
       }
+      const localData = localStorage.getItem('siteContent');
+      if (localData) {
+        try {
+          const parsed = JSON.parse(localData);
+          if (parsed && Object.keys(parsed).length > 0) {
+            if (typeof activeConfig !== 'undefined') activeConfig = parsed;
+            if (typeof content !== 'undefined') content = parsed;
+          }
+        } catch (e) {}
+      }
 
-      // Initial Render with fallback config
+      // Initial Render with local config
       updatePageElements(content);
       
       // Initialize live calendar, weather and exchange rate widgets
       initInfoWidgets();
       initMobileMenu();
-
-      // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
-      let scriptURL = content.formConfig?.scriptURL || "";
-      if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-        scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-      }
-      if (scriptURL && !isDraftPreview) {
-        fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          if (data) {
-            // Cloud data takes 100% master priority over sports-config.js
-            content = Object.assign({}, window.siteContent || {}, data);
-            if (data.items) content.items = data.items;
-            if (data.vaultConfig && Array.isArray(data.vaultConfig.users)) {
-              if (!content.vaultConfig) content.vaultConfig = {};
-              content.vaultConfig.users = data.vaultConfig.users;
-            }
-            if (data.examsConfig && Array.isArray(data.examsConfig.sections)) {
-              content.examsConfig = data.examsConfig;
-            }
-            if (data.eventsConfig && Array.isArray(data.eventsConfig.timeline)) {
-              content.eventsConfig = data.eventsConfig;
-            }
-            if (data.galleryConfig) {
-              content.galleryConfig = data.galleryConfig;
-            }
-            updatePageElements(content);
-          }
-        })
-        .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
-      }
 
       function updatePageElements(data) {
         if (!data) return;

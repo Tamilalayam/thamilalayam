@@ -223,20 +223,8 @@
         return merged;
       }
 
-      if (scriptURL && !isDraftPreview) {
-        fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          if (data) {
-            console.log("Loaded fresh config dynamically from Google Cloud API");
-            const merged = safeMergeConfig(window.siteContent || {}, data);
-            activeConfig = merged;
-            updateCommonElements(merged);
-            if (typeof window.renderGalleryPhotos === 'function') window.renderGalleryPhotos(merged);
-          }
-        })
-        .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
-      }
+      updateCommonElements(activeConfig);
+      if (typeof window.renderGalleryPhotos === 'function') window.renderGalleryPhotos(activeConfig);
 
       function updateCommonElements(data) {
         const logoUrl = data.logo || data.formConfig?.logoUrl || "IMG_3529.jpg";

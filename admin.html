@@ -318,13 +318,6 @@
       <section id="panel-export" class="panel-card">
         <h2>💾 சேமி & ஏற்றுமதி (Save & Export)</h2>
 
-        <!-- Google Cloud Sync Feature Box -->
-        <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; padding: 20px; border-radius: 16px; margin-bottom: 25px;">
-          <h3 style="color: #166534; font-size: 16px; margin-bottom: 8px;">☁️ கூகுள் கிளவுட் இணைப்பு (Google Cloud Data Sync)</h3>
-          <p style="font-size: 13.5px; color: #15803d; margin-bottom: 15px;">Google Script / Sheet-இல் உள்ள புதிய மாணவர் தரவுகள் மற்றும் அமைப்புகளை நேரடியாக இங்கு இறக்குமதி செய்ய:</p>
-          <button type="button" class="btn btn-primary" style="background: #059669; padding: 12px 22px; font-weight: 700;" onclick="fetchDataFromCloud()">☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)</button>
-        </div>
-
         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
         <h2>💾 மாற்றங்களைச் சேமித்தல் (Save & Export Panel)</h2>
         
@@ -332,8 +325,7 @@
           <h4>💡 மாற்றங்களை எவ்வாறு நிரந்தரமாகப் பயன்படுத்துவது?</h4>
           <ol style="margin-top: 6px; padding-left: 15px;">
             <li>முதலில் <strong>"மாற்றங்களை தற்காலிகமாக சேமி"</strong> பொத்தானை அழுத்தினால் இந்த பிரவுசரில் உடனே மாற்றங்கள் தெரியும்.</li>
-  <!-- Include sports-config.js database -->
-  <script src="sports-config.js?v=1785521173"></script>
+            <li>நிரந்தரமாக இணையதளத்தில் மாற்றுவதற்கு <strong>"Export sports-config.js"</strong> பொத்தானை அழுத்திப் பதிவிறக்கி உங்களின் ஹோஸ்டிங்கில் ஏற்றவும்.</li>
           </ol>
         </div>
 
@@ -344,7 +336,6 @@
             <input type="file" accept=".js,.json" onchange="handleBackupFileSelect(this)" style="display:none;">
           </label>
           <button class="btn btn-success" style="flex:1; min-width: 200px; padding: 14px; font-size:14.5px;" onclick="saveToLocalStorage()">💾 தற்காலிகமாக சேமி (Save Preview)</button>
-          <button class="btn btn-primary" style="flex:1; min-width: 200px; padding: 14px; font-size:14.5px; background: #059669;" onclick="saveConfigToCloud(event)">☁️ கிளவுடில் நேரடியாகச் சேமி (Save to Cloud)</button>
           <button class="btn btn-danger" style="flex:1; min-width: 180px; padding: 14px; font-size:14.5px;" onclick="resetToDefaults()">⚠️ மீட்டமை (Reset)</button>
         </div>
 
@@ -761,7 +752,7 @@
         <input type="text" id="user-fullNameEn" placeholder="e.g. Abiya Jeyakanthan">
       </div>
       <div class="form-group">
-        <label>வகுப்பு (Class / Grade)</label>
+        <label>ஆண்டு (Year)</label>
         <input type="text" id="user-studentClass" placeholder="எ.கா: தரம் 5">
       </div>
       <div class="form-group">
@@ -968,12 +959,10 @@
         currentContent.vaultConfig = { userPasswordPlaceholder: "உள்நுழையவும்", users: [], pdfs: [] };
       }
       
-      if (!currentContent.vaultConfig.users || currentContent.vaultConfig.users.length === 0) {
-        currentContent.vaultConfig.users = [
-          { "username": "மாணவர் 1", "password": "student2026" },
-          { "username": "பெற்றோர் 1", "password": "parent2026" },
-          { "username": "நண்பர் 1", "password": "friend2026" }
-        ];
+      if (window.siteContent && window.siteContent.vaultConfig && Array.isArray(window.siteContent.vaultConfig.users) && window.siteContent.vaultConfig.users.length > 0) {
+        if (!currentContent.vaultConfig.users || currentContent.vaultConfig.users.length === 0) {
+          currentContent.vaultConfig.users = window.siteContent.vaultConfig.users;
+        }
       }
       
       if (!currentContent.vaultConfig.pdfs || currentContent.vaultConfig.pdfs.length === 0) {
@@ -2513,7 +2502,7 @@
 
         let detailsText = '';
         if (user.fullName || user.fullNameEn || user.studentClass) {
-          detailsText = `<div class="item-preview" style="font-size: 13.5px; color: #475569; margin-top:5px;">முழுப் பெயர்: <strong>${escapeHtml(user.fullName || '')}</strong>${user.fullNameEn ? ' (' + escapeHtml(user.fullNameEn) + ')' : ''} | வகுப்பு: <strong>${escapeHtml(user.studentClass || '')}</strong></div>`;
+          detailsText = `<div class="item-preview" style="font-size: 13.5px; color: #475569; margin-top:5px;">முழுப் பெயர்: <strong>${escapeHtml(user.fullName || '')}</strong>${user.fullNameEn ? ' (' + escapeHtml(user.fullNameEn) + ')' : ''} | ஆண்டு: <strong>${escapeHtml(user.studentClass || '')}</strong></div>`;
         }
         card.innerHTML = `
           <div class="item-info">
@@ -2874,17 +2863,6 @@
         currentContent.contactConfig.email = getInputValue('contact-email-input');
 
         localStorage.setItem('siteContent', JSON.stringify(currentContent));
-        
-        // Auto-sync to Google Cloud Script
-        const scriptURL = currentContent.formConfig?.scriptURL || "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-        if (scriptURL) {
-          fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'saveConfig', data: currentContent })
-          }).catch(err => console.log("Cloud auto-sync note:", err));
-        }
 
         // Toast notice
         const toast = document.getElementById('toast');
@@ -2959,78 +2937,6 @@ window.siteContent = ${JSON.stringify(currentContent, null, 2)};
       }
     }
 
-    // Direct Cloud configuration saving
-    function saveConfigToCloud(event) {
-      try {
-        // 🚨 100% Safety Guarantee Lock: Check if student vault data is missing locally
-        const users = currentContent.vaultConfig?.users || [];
-        if (!users || users.length === 0) {
-          alert(
-            "🛑 ஆபத்தான எச்சரிக்கை! (100% Safety Lock Enabled)\n\n" +
-            "உங்களின் கணினியில் மாணவர் தரவுகள் (Student Vault Records) எதுவும் இல்லை!\n\n" +
-            "இப்படியே கிளவுடில் சேமித்தால் கூகிளில் உள்ள தரவு அழிந்துவிடும், எனவே முதலில் '☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)' பொத்தானை அழுத்துங்கள்!"
-          );
-          return;
-        }
-
-        let scriptURL = currentContent.formConfig?.scriptURL || currentContent.scriptURL;
-        if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-          scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-        }
-        if (!scriptURL) {
-          alert("கூகுள் ஸ்கிரிப்ட் முகவரி (Google Script URL) பொது அமைப்புகளில் இன்னும் இணைக்கப்படவில்லை!");
-          return;
-        }
-        
-        if (!confirm("இந்த மாற்றங்களை நேரடியாகக் கூகுள் கிளவுடில் சேமிக்க விரும்புகிறீர்களா? (இணையதளம் கோப்பு அப்லோடு செய்யாமல் உடனே அப்டேட் ஆகும்!)")) {
-          return;
-        }
-      
-      const saveBtn = event ? event.target : null;
-      let oldText = "";
-      if (saveBtn) {
-        oldText = saveBtn.textContent;
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'கிளவுடில் சேமிக்கப்படுகிறது...';
-      }
-      
-      // Save state to localStorage silently first
-      saveToLocalStorage(true);
-      
-      const passcode = currentContent.formConfig?.adminPasscode || currentContent.adminPasscode || 'admin123';
-      
-      const formData = new FormData();
-      formData.append('configData', JSON.stringify(currentContent));
-      
-      fetch(scriptURL + '?action=saveConfig&passcode=' + encodeURIComponent(passcode), {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          alert("🎉 வெற்றிகரமாக உங்களது மாற்றங்கள் கூகுள் கிளவுடில் சேமிக்கப்பட்டுவிட்டது! கோப்புகளை அப்லோடு செய்யாமலேயே இணையதளம் அப்டேட் ஆகிவிட்டது.");
-        } else {
-          alert("பிழை: " + data.message);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("கூகுள் கிளவுடில் சேமிக்க முடியவில்லை. இணைய இணைப்பு மற்றும் கூகுள் ஸ்கிரிப்ட் அமைப்புகளைச் சரிபார்க்கவும்.");
-      })
-      .finally(() => {
-        if (saveBtn) {
-          saveBtn.disabled = false;
-          saveBtn.textContent = oldText;
-        }
-      });
-      } catch (err) {
-        console.error("Error in saveConfigToCloud:", err);
-        alert("பிழை (Save Cloud UI): " + err.message + "\n\nStack Trace:\n" + err.stack);
-      }
-    }
-
-
     function resetToDefaults() {
       if (confirm('அமைப்புகள் அனைத்தையும் அழித்துவிட்டு ஆரம்ப நிலைக்குத் திரும்ப விரும்புகிறீர்களா? உங்களது LocalStorage சேமிப்புகள் நீக்கப்படும்.')) {
         localStorage.removeItem('siteContent');
@@ -3058,42 +2964,6 @@ window.siteContent = ${JSON.stringify(currentContent, null, 2)};
 
     // Trigger auth overlay or checks
     checkAuth();
-  
-    async function fetchDataFromCloud() {
-      const urlInput = document.getElementById('cloud-script-url');
-      let scriptUrl = urlInput ? urlInput.value.trim() : '';
-      if (!scriptUrl && typeof currentContent !== 'undefined' && currentContent.cloudScriptUrl) {
-        scriptUrl = currentContent.cloudScriptUrl;
-      }
-      if (!scriptUrl) {
-        scriptUrl = prompt("உங்கள் Google Apps Script Web App URL ஐ உள்ளிடவும்:\n(எ.கா: https://script.google.com/macros/s/.../exec)");
-      }
-      if (!scriptUrl) return;
-      
-      const statusBtn = event ? event.target : null;
-      if (statusBtn) statusBtn.textContent = "⏳ கூகிளிலிருந்து பெறப்படுகிறது...";
-
-      try {
-        const fetchUrl = scriptUrl + (scriptUrl.includes('?') ? '&' : '?') + 'action=getConfig';
-        const response = await fetch(fetchUrl);
-        const data = await response.json();
-        
-        if (data && data.status !== "empty") {
-          currentContent = Object.assign({}, currentContent, data);
-          localStorage.setItem('siteContent', JSON.stringify(currentContent));
-          loadData();
-          alert("🎉 வெற்றி! கூகுள் கிளவுடில் உள்ள அனைத்துப் புதிய தரவுகளும் வெற்றிகரமாகப் பெறப்பட்டுவிட்டது!");
-        } else {
-          alert("⚠️ கூகுள் கிளவுடில் தரவுகள் எதுவும் கிடைக்கவில்லை அல்லது காலியாக உள்ளது.");
-        }
-      } catch (err) {
-        console.error("Cloud fetch error:", err);
-        alert("⚠️ கிளவுட் இணைப்பில் பிழை: " + err.message + "\n\nGoogle Apps Script 'Anyone' அணுகலில் உள்ளதா என்பதைச் சரிபார்க்கவும்.");
-      } finally {
-        if (statusBtn) statusBtn.textContent = "☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)";
-      }
-    }
-
 
     function exportSportsConfigFile() {
       try {
@@ -3111,21 +2981,6 @@ window.siteContent = ${JSON.stringify(currentContent, null, 2)};
         console.error("Export error:", err);
         alert("⚠️ பதிவிறக்கம் செய்வதில் பிழை: " + err.message);
       }
-    }
-
-
-    // Safety Protection Guard against accidental cloud data wipe (100% Safety Lock)
-    function checkCloudSaveSafety() {
-      const users = currentContent.vaultConfig?.users || [];
-      if (!users || users.length === 0) {
-        alert(
-          "🛑 ஆபத்தான எச்சரிக்கை! (100% Safety Lock Enabled)\n\n" +
-          "உங்களின் கணினியில் மாணவர் தரவுகள் (Student Vault Records) எதுவும் இல்லை!\n\n" +
-          "இப்படியே கிளவுடில் சேமித்தால் கூகிளில் உள்ள தரவு அழிந்துவிடும், எனவே முதலில் '☁️ கூகுள் கிளவுடிலிருந்து பெற (Fetch Data from Google Cloud)' பொத்தானை அழுத்துங்கள்!"
-        );
-        return false;
-      }
-      return true;
     }
 
 </script>

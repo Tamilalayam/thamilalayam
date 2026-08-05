@@ -132,12 +132,6 @@
   <!-- Main Container -->
   <div class="container" id="exams-container">
     <h2 class="title-h1">தமிழாலயத் தேர்வுகள் (Exams Portal)</h2>
-    
-
-    <div class="exam-section">
-      <h3>தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறியும் வழிமுறை:</h3>
-      <p>மாணவர்கள் மற்றும் பெற்றோர்கள் தங்களுக்கு வழங்கப்பட்ட பயனர் பெயர் (Username) மற்றும் கடவுச்சொல் (Password) மூலம் <strong>'உள்நுழைவு' (Login)</strong> பக்கத்திற்குச் சென்று தங்களுடைய தேர்வுப் பெறுபேறு மற்றும் தமிழ்த்திறன் போட்டிப் பெறுபேறுகளை அறிந்து கொள்ளலாம்.</p>
-    </div>
   </div>
 
   <footer>
@@ -253,38 +247,8 @@
       }
       activeConfig = safeMergeConfig(window.siteContent || {}, activeConfig);
 
-      // Dynamic Cloud Fetch (Load live config updates from Google Sheets)
-      let scriptURL = (typeof activeConfig !== 'undefined' && activeConfig && activeConfig.formConfig?.scriptURL) ||
-                        (typeof content !== 'undefined' && content && content.formConfig?.scriptURL) ||
-                        "";
-      if (!scriptURL || scriptURL.includes("AKfycbzd_5lljmz6NbUp")) {
-        scriptURL = "https://script.google.com/macros/s/AKfycbwvobVHfdBXSAQz1hFrUnc1M6eDj4gTcpWc8SaeJBls4OaXiaXX9z7LP6kecaP1tKsf/exec";
-      }
-      function safeMergeConfig(local, cloud) {
-        if (!cloud || Object.keys(cloud).length === 0) return local || {};
-        const merged = Object.assign({}, local, cloud);
-
-        // Cloud examsConfig takes 100% priority
-        if (cloud.examsConfig && Array.isArray(cloud.examsConfig.sections)) {
-          merged.examsConfig = cloud.examsConfig;
-        }
-        return merged;
-      }
-
-      if (scriptURL && !isDraftPreview) {
-        fetch(scriptURL + '?action=getConfig&_t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          if (data) {
-            console.log("Loaded fresh config dynamically from Google Cloud API");
-            const merged = safeMergeConfig(window.siteContent || {}, data);
-            activeConfig = merged;
-            updateCommonElements(merged);
-            if (typeof window.renderExams === 'function') window.renderExams(merged);
-          }
-        })
-        .catch(err => console.warn("Google Apps Script config fetch skipped:", err));
-      }
+      updateCommonElements(activeConfig);
+      if (typeof window.renderExams === 'function') window.renderExams(activeConfig);
 
       function updateCommonElements(data) {
         const logoUrl = data.logo || data.formConfig?.logoUrl || "IMG_3529.jpg";
