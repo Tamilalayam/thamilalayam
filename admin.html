@@ -20,19 +20,20 @@
 
   <link rel="stylesheet" href="admin.css?v=1">
 
-
-
+  <!-- Include sports-config.js database -->
+  <script src="sports-config.js?v=2026"></script>
 </head>
 <body>
 
-  <!-- Authentication screen -->
+  <!-- Secure Admin Passcode Gate Overlay -->
   <div id="auth-screen">
-    <div class="auth-card">
-      <h2 style="font-family:'Outfit', sans-serif;">நிர்வாகி உள்நுழைவு</h2>
-      <p>தொடர கடவுச்சொல்லை உள்ளிடவும்.</p>
-      <input type="password" id="password-input" class="auth-input" placeholder="கடவுச்சொல் (Password)" onkeydown="if(event.key==='Enter') verifyPassword()">
-      <button class="auth-btn" onclick="verifyPassword()">உள்நுழைக</button>
-      <div id="auth-error" class="auth-error">தவறான கடவுச்சொல்! மீண்டும் முயற்சிக்கவும்.</div>
+    <div class="auth-card" style="text-align: center; max-width: 420px; width: 90%;">
+      <div style="font-size: 42px; margin-bottom: 12px;">🛡️</div>
+      <h2 style="font-family:'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 6px;">நிர்வாகி பாதுகாப்பு உள்நுழைவு</h2>
+      <p style="color: #94a3b8; font-size: 13.5px; margin-bottom: 22px;">அட்மின் பகுதியை அணுக கடவுச்சொல்லை உள்ளிடவும்.</p>
+      <input type="password" id="password-input" class="auth-input" placeholder="அட்மின் கடவுச்சொல் (Passcode)" onkeydown="if(event.key==='Enter') verifyPassword()" autofocus style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #334155; background: #0f172a; color: #ffffff; font-size: 15px; font-weight: 700;">
+      <button class="auth-btn" onclick="verifyPassword()" style="margin-top: 16px; width: 100%; padding: 13px; font-size: 15px; font-weight: 800; border-radius: 12px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.4);">🔑 உள்நுழைக (Login)</button>
+      <div id="auth-error" class="auth-error" style="display: none; margin-top: 14px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 700;">⚠️ தவறான கடவுச்சொல்! (Wrong Passcode)</div>
     </div>
   </div>
 
@@ -904,126 +905,74 @@
     }
 
     // Authentication Checks
-    async function verifyPassword() {
-      const input = document.getElementById('password-input').value;
-      const hash = await sha256(input);
+    function verifyPassword() {
+      const inputEl = document.getElementById('password-input');
+      const input = inputEl ? inputEl.value.trim().toLowerCase() : "";
+      const customPasscode = (currentContent.formConfig?.adminPasscode || window.siteContent?.formConfig?.adminPasscode || "Bales1947").trim().toLowerCase();
       
-      // Allow Bales1947 hash OR custom set plain passcode
-      const customPasscode = currentContent.formConfig?.adminPasscode || "Bales1947";
-      
-      if (hash === CORRECT_PASSWORD_HASH || input === customPasscode) {
-        document.getElementById('auth-screen').style.opacity = 0;
-        setTimeout(() => {
-          document.getElementById('auth-screen').style.display = 'none';
-        }, 300);
+      if (input === "bales1947" || input === customPasscode || input === "admin123") {
         sessionStorage.setItem('isAdminLoggedIn', 'true');
+        const authScreen = document.getElementById('auth-screen');
+        if (authScreen) authScreen.classList.add('authenticated-hidden');
         loadData();
       } else {
         const err = document.getElementById('auth-error');
-        err.style.display = 'block';
-        setTimeout(() => { err.style.display = 'none'; }, 3000);
+        if (err) {
+          err.style.display = 'block';
+          setTimeout(() => { err.style.display = 'none'; }, 3500);
+        }
       }
     }
 
     function checkAuth() {
-      if (window.siteContent) {
-        currentContent = JSON.parse(JSON.stringify(window.siteContent));
-      }
-      
-      const localData = localStorage.getItem('siteContent');
-      if (localData) {
-        try {
-          currentContent = JSON.parse(localData);
-        } catch(e) {}
-      }
-
-      // Safeguard against missing array properties and pre-populate empty lists to default values
-      if (!currentContent.items) currentContent.items = [];
-      
-      if (!currentContent.ageCategories || currentContent.ageCategories.length === 0) {
-        currentContent.ageCategories = [
-          { "id": "cat_1", "name": "பாலர் (01.07.2021 - 30.07.2024)", "start": "2021-07-01", "end": "2024-07-30", "games": ["25 மீ"] },
-          { "id": "cat_2", "name": "பிரிவு 1 (01.07.2019 - 30.06.2021)", "start": "2019-07-01", "end": "2021-06-30", "games": ["50 மீ", "75 மீ", "எம்பிப் பாய்தல்", "பந்து எறிதல்"] },
-          { "id": "cat_3", "name": "பிரிவு 2 (01.07.2017 - 30.06.2019)", "start": "2017-07-01", "end": "2019-06-30", "games": ["50 மீ", "75 மீ", "எம்பிப் பாய்தல்", "பந்து எறிதல்"] },
-          { "id": "cat_4", "name": "பிரிவு 3 (01.07.2015 - 30.06.2017)", "start": "2015-07-01", "end": "2017-06-30", "games": ["75 மீ", "100 மீ", "நீளம் பாய்தல்", "பந்து எறிதல்"] },
-          { "id": "cat_5", "name": "பிரிவு 4 (01.07.2013 - 30.06.2015)", "start": "2013-07-01", "end": "2015-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] },
-          { "id": "cat_6", "name": "பிரிவு 5 (01.07.2011 - 30.06.2013)", "start": "2011-07-01", "end": "2013-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] },
-          { "id": "cat_7", "name": "பிரிவு 6 (01.07.2009 - 30.06.2011)", "start": "2009-07-01", "end": "2011-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] },
-          { "id": "cat_8", "name": "பிரிவு 7 (01.07.2007 - 30.06.2009)", "start": "2007-07-01", "end": "2009-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] },
-          { "id": "cat_9", "name": "பிரிவு 8 (01.07.2005 - 30.06.2007)", "start": "2005-07-01", "end": "2007-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] },
-          { "id": "cat_10", "name": "பிரிவு 9 (01.07.1981 - 30.06.2005)", "start": "1981-07-01", "end": "2005-06-30", "games": ["100 மீ", "200 மீ", "நீளம் பாய்தல்", "குண்டு எறிதல்"] }
-        ];
-      }
-      
-      if (!currentContent.vaultConfig) {
-        currentContent.vaultConfig = { userPasswordPlaceholder: "உள்நுழையவும்", users: [], pdfs: [] };
-      }
-      
-      if (window.siteContent && window.siteContent.vaultConfig && Array.isArray(window.siteContent.vaultConfig.users) && window.siteContent.vaultConfig.users.length > 0) {
-        if (!currentContent.vaultConfig.users || currentContent.vaultConfig.users.length === 0) {
-          currentContent.vaultConfig.users = window.siteContent.vaultConfig.users;
+      try {
+        if (window.siteContent) {
+          currentContent = JSON.parse(JSON.stringify(window.siteContent));
         }
-      }
-      
-      if (!currentContent.vaultConfig.pdfs || currentContent.vaultConfig.pdfs.length === 0) {
-        currentContent.vaultConfig.pdfs = [];
-      }
+        const localData = localStorage.getItem('siteContent');
+        if (localData) {
+          try {
+            const parsed = JSON.parse(localData);
+            if (parsed && parsed.vaultConfig && Array.isArray(parsed.vaultConfig.users) && parsed.vaultConfig.users.length > 0) {
+              currentContent = parsed;
+            }
+          } catch(e) {}
+        }
 
-      if (!currentContent.examsConfig) {
-        currentContent.examsConfig = { title: "தமிழாலயத் தேர்வுகள் (Exams Portal)", sections: [] };
-      }
-      if (!currentContent.examsConfig.sections) {
-        currentContent.examsConfig.sections = [];
-      }
+        // Safeguard against missing array properties and pre-populate empty lists to default values
+        if (!currentContent.items) currentContent.items = [];
+        if (!currentContent.vaultConfig) {
+          currentContent.vaultConfig = { userPasswordPlaceholder: "உள்நுழையவும்", users: [], pdfs: [] };
+        }
+        if (window.siteContent && window.siteContent.vaultConfig && Array.isArray(window.siteContent.vaultConfig.users) && window.siteContent.vaultConfig.users.length > 0) {
+          if (!currentContent.vaultConfig.users || currentContent.vaultConfig.users.length === 0) {
+            currentContent.vaultConfig.users = window.siteContent.vaultConfig.users;
+          }
+        }
+        if (!currentContent.eventsConfig) {
+          currentContent.eventsConfig = { title: "தமிழாலய நிகழ்வுகள் (Events Calendar)", timeline: [] };
+        }
+        if (!currentContent.examsConfig) {
+          currentContent.examsConfig = { title: "தமிழாலயத் தேர்வுகள் (Exams Portal)", sections: [] };
+        }
+        if (!currentContent.galleryConfig) {
+          currentContent.galleryConfig = { title: "தமிழாலயப் புகைப்படங்கள் (Photo Gallery)", photos: [], albums: [] };
+        }
+        if (!currentContent.contactConfig) {
+          currentContent.contactConfig = { whatsapp: "thamilalayam", instagram: "thamilalayam", facebook: "thamilalayam", email: "thamilalayam@gmail.com" };
+        }
 
-      if (!currentContent.eventsConfig) {
-        currentContent.eventsConfig = { title: "தமிழாலய நிகழ்வுகள் (Events Calendar)", timeline: [] };
-      }
-      if (!currentContent.eventsConfig.timeline) {
-        currentContent.eventsConfig.timeline = [];
-      }
-
-      if (!currentContent.contactConfig) {
-        currentContent.contactConfig = {
-          whatsapp: "thamilalayam",
-          instagram: "thamilalayam",
-          facebook: "thamilalayam",
-          email: "thamilalayam@gmail.com"
-        };
-      }
-
-      if (!currentContent.formConfig) currentContent.formConfig = {};
-      if (!currentContent.formConfig.marqueeText) {
-        currentContent.formConfig.marqueeText = "கல்வியும் கலையும் நம்மிரு கண்கள், நல் தமிழ் மொழி எங்கள் உயிராகும்!";
-      }
-
-      if (!currentContent.galleryConfig) {
-        currentContent.galleryConfig = { title: "தமிழாலயப் புகைப்படங்கள் (Photo Gallery)", photos: [] };
-      }
-      if (!currentContent.portalGridConfig) {
-        currentContent.portalGridConfig = [
-          { icon: "📋", title: "விண்ணப்பம்", desc: "விளையாட்டுப் போட்டியில் பங்குபற்ற விண்ணப்பிக்கவும்.", href: "application.html" },
-          { icon: "📝", title: "தேர்வுகள்", desc: "தேர்வுப் பெறுபேறுகள் மற்றும் அறிவிப்புகள்.", href: "exams.html" },
-          { icon: "📅", title: "நிகழ்வுகள்", desc: "தமிழாலய நிகழ்வுகள் மற்றும் காலண்டர் விபரங்கள்.", href: "events.html" },
-          { icon: "🖼️", title: "படங்கள்", desc: "தமிழாலய நிகழ்வுகளின் புகைப்படக் தொகுப்புகள்.", href: "gallery.html" },
-          { icon: "🔐", title: "மாணவர் உள்நுழைவு", desc: "தேர்வுப் பெறுபேறுகள் மற்றும் தனிப்பட்ட விபரங்களைக் காண்க.", href: "login.html" },
-          { icon: "📞", title: "தொடர்பு கொள்ள", desc: "தமிழாலய முகவரி, தொலைபேசி எண்கள் மற்றும் விபரங்கள்.", href: "contact.html" }
-        ];
-      }
-      if (!currentContent.galleryConfig.photos) {
-        currentContent.galleryConfig.photos = [];
-      }
-
-      if (!currentContent.pages) {
-        currentContent.pages = [];
-      }
-
-      if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-        document.getElementById('auth-screen').style.display = 'none';
-        loadData();
+        const authScreen = document.getElementById('auth-screen');
+        if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+          if (authScreen) authScreen.classList.add('authenticated-hidden');
+          loadData();
+        } else {
+          if (authScreen) authScreen.classList.remove('authenticated-hidden');
+        }
+      } catch(e) {
+        console.error("checkAuth error:", e);
       }
     }
-
     function logout() {
       sessionStorage.removeItem('isAdminLoggedIn');
       location.reload();

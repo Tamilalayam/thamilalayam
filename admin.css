@@ -38,10 +38,22 @@ body {
 
 /* ── Auth passcode gate ── */
 #auth-screen {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 9999; transition: opacity 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  transition: opacity 0.3s ease;
+}
+
+#auth-screen.authenticated-hidden {
+  display: none !important;
+  pointer-events: none !important;
 }
 .auth-card {
   background: rgba(30, 41, 59, 0.9);
